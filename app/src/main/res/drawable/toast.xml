@@ -1,0 +1,11 @@
+<!-- res/drawable/toast_background.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#FFF8E1" /> <!-- Color pergamino suave -->
+    <corners android:radius="12dp" /> <!-- Bordes redondeados -->
+    <padding
+        android:left="16dp"
+        android:right="16dp"
+        android:top="8dp"
+        android:bottom="8dp" />
+    <stroke android:width="2dp" android:color="#8B5A2B" /> <!-- Borde color marrón -->
+</shape>

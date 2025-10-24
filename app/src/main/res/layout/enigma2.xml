@@ -1,0 +1,255 @@
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBlack"
+    >
+
+    <ImageView
+        android:id="@+id/enigma2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/fondo"
+        android:visibility="visible"
+        />
+
+    <Button
+        android:id="@+id/saltar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|start"
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="40dp"
+        android:background="@color/transparencia"
+        android:fontFamily="@font/julee_regular"
+        android:text="Saltar"
+        android:textAllCaps="false"
+        android:textColor="@color/transparencia"
+        android:textSize="35sp"
+        android:visibility="visible"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:orientation="horizontal"
+        >
+
+        <Button
+            android:id="@+id/repetir"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="40dp"
+            android:background="@drawable/button_rounded"
+            android:fontFamily="@font/julee_regular"
+            android:text="¿Qué hacer?"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
+            android:textSize="35sp"
+            android:visibility="visible" />
+
+        <Button
+            android:id="@+id/exit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Salir"
+            android:textColor="@color/colorWhite"
+            android:visibility="visible"
+            android:textAllCaps="false"
+            android:textSize="35sp"
+            android:background="@drawable/button_rounded"
+            android:fontFamily="@font/julee_regular"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="40dp" />
+
+    </LinearLayout>
+
+
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginTop="40dp"
+            android:fontFamily="@font/julee_regular"
+            android:padding="10dp"
+            android:text="Completa los círculos con los números que faltan, para que la multiplicación de las filas y columnas de el mismo resultado"
+            android:textAlignment="center"
+            android:textColor="@color/colorBlack"
+            android:textSize="35sp"
+            android:visibility="visible" />
+
+        <ImageView
+            android:layout_width="400dp"
+            android:layout_height="370dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"
+            android:src="@drawable/circulos"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/pistas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/button_rounded"
+                android:fontFamily="@font/julee_regular"
+                android:text="Consultar pistas"
+                android:textAllCaps="false"
+                android:textColor="@color/colorWhite"
+                android:textSize="50sp"
+                android:visibility="visible" />
+
+            <Button
+                android:id="@+id/comprobar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/button_rounded"
+                android:fontFamily="@font/julee_regular"
+                android:text="Comprobar"
+                android:textAllCaps="false"
+                android:textColor="@color/colorWhite"
+                android:textSize="50sp"
+                android:visibility="visible" />
+
+        </LinearLayout>
+
+    </android.support.v7.widget.LinearLayoutCompat>
+
+    <EditText
+        android:id="@+id/centro"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:inputType="number"
+        android:hint=""
+        android:fontFamily="@font/julee_regular"
+        android:focusableInTouchMode="true"
+        android:textSize="60sp"
+        android:maxLength="1"
+        android:textColor="@color/colorBlack"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/transparencia"
+        />
+
+    <EditText
+        android:id="@+id/vertical11"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:inputType="number"
+        android:hint=""
+        android:textSize="60sp"
+        android:focusableInTouchMode="true"
+        android:maxLength="1"
+        android:fontFamily="@font/julee_regular"
+        android:textColor="@color/colorBlack"
+        android:layout_marginBottom="90dp"
+        android:layout_marginRight="150dp"
+        android:backgroundTint="@color/transparencia"
+        />
+
+    <EditText
+        android:id="@+id/vertical21"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="150dp"
+        android:layout_marginBottom="100dp"
+        android:fontFamily="@font/julee_regular"
+        android:hint=""
+        android:inputType="number"
+        android:focusableInTouchMode="true"
+        android:maxLength="1"
+        android:textColor="@color/colorBlack"
+        android:backgroundTint="@color/transparencia"
+        android:textSize="60sp" />
+    <EditText
+        android:id="@+id/vertical12"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:inputType="number"
+        android:hint=""
+        android:maxLength="1"
+        android:textSize="60sp"
+        android:focusableInTouchMode="true"
+        android:fontFamily="@font/julee_regular"
+        android:textColor="@color/colorBlack"
+        android:layout_marginTop="140dp"
+        android:layout_marginRight="150dp"
+        android:backgroundTint="@color/transparencia"
+        />
+
+    <EditText
+        android:id="@+id/vertical22"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:inputType="number"
+        android:hint=""
+        android:maxLength="1"
+        android:focusableInTouchMode="true"
+        android:backgroundTint="@color/transparencia"
+        android:textSize="60sp"
+        android:fontFamily="@font/julee_regular"
+        android:textColor="@color/colorBlack"
+        android:layout_marginTop="140dp"
+        android:layout_marginLeft="150dp"
+        />
+
+
+    <Button
+        android:id="@+id/flechaSiguiente"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="->"
+        android:textColor="@color/colorWhite"
+        android:visibility="gone"
+        android:textAllCaps="false"
+        android:textSize="35sp"
+        android:background="@drawable/button_rounded"
+        android:fontFamily="@font/julee_regular"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="40dp"
+        android:layout_marginEnd="40dp" />
+
+
+    <Button
+        android:id="@+id/volverEnigma1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="&lt;-"
+        android:textColor="@color/colorWhite"
+        android:visibility="visible"
+        android:textAllCaps="false"
+        android:textSize="35sp"
+        android:background="@drawable/button_rounded"
+        android:fontFamily="@font/julee_regular"
+        android:layout_gravity="bottom|start"
+        android:layout_marginBottom="40dp"
+        android:layout_marginStart="40dp" />
+
+
+
+</FrameLayout>

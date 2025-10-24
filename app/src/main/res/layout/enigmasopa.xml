@@ -1,0 +1,170 @@
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBlack"
+    >
+
+    <ImageView
+        android:id="@+id/enigma3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/fondo"
+        android:visibility="visible"
+        />
+
+    <Button
+        android:id="@+id/saltar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|start"
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="40dp"
+        android:background="@color/transparencia"
+        android:fontFamily="@font/julee_regular"
+        android:text="Saltar"
+        android:textAllCaps="false"
+        android:textColor="@color/transparencia"
+        android:textSize="35sp"
+        android:visibility="visible"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:orientation="horizontal"
+        >
+
+        <Button
+            android:id="@+id/repetir"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="40dp"
+            android:background="@drawable/button_rounded"
+            android:fontFamily="@font/julee_regular"
+            android:text="¿Qué hacer?"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
+            android:textSize="35sp"
+            android:visibility="visible" />
+
+        <Button
+            android:id="@+id/exit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Salir"
+            android:textColor="@color/colorWhite"
+            android:visibility="visible"
+            android:textAllCaps="false"
+            android:textSize="35sp"
+            android:background="@drawable/button_rounded"
+            android:fontFamily="@font/julee_regular"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="40dp" />
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:text="¿Cuál es el nombre de mi creador?"
+            android:visibility="visible"
+            android:textAllCaps="false"
+            android:textSize="70sp"
+            android:fontFamily="@font/julee_regular"
+            android:layout_gravity="center"
+            android:textAlignment="center" />
+
+
+
+            <EditText
+                android:id="@+id/respuesta"
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:inputType="text"
+                android:hint=""
+                android:focusedByDefault="false"
+                android:layout_marginBottom="40dp"
+                android:textSize="60sp"
+                android:maxLength="20"
+                android:fontFamily="@font/julee_regular"
+                android:textColor="@color/colorBlack"
+                android:layout_marginTop="60dp"
+                android:visibility="visible"
+                />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+
+            <Button
+                android:id="@+id/comprobar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Comprobar"
+                android:textColor="@color/colorWhite"
+                android:visibility="visible"
+                android:textAllCaps="false"
+                android:textSize="50sp"
+                android:background="@drawable/button_rounded"
+                android:fontFamily="@font/julee_regular"
+                android:layout_gravity="center" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/fin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="->"
+        android:textColor="@color/colorWhite"
+        android:visibility="gone"
+        android:textAllCaps="false"
+        android:textSize="35sp"
+        android:background="@drawable/button_rounded"
+        android:fontFamily="@font/julee_regular"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="40dp"
+        android:layout_marginEnd="40dp" />
+
+
+    <Button
+        android:id="@+id/atras"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="&lt;-"
+        android:textColor="@color/colorWhite"
+        android:visibility="visible"
+        android:textAllCaps="false"
+        android:textSize="35sp"
+        android:background="@drawable/button_rounded"
+        android:fontFamily="@font/julee_regular"
+        android:layout_gravity="bottom|start"
+        android:layout_marginBottom="40dp"
+        android:layout_marginStart="40dp" />
+
+</FrameLayout>

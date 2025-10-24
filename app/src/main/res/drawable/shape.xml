@@ -1,0 +1,6 @@
+<!-- res/drawable/custom_toast_background.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#FFFFFF"/> <!-- Fondo del toast -->
+    <corners android:radius="20dp"/> <!-- Radio de las esquinas -->
+    <padding android:left="15dp" android:top="15dp" android:right="15dp" android:bottom="15dp"/>
+</shape>

@@ -1,0 +1,39 @@
+<!-- res/layout/dialog_pistas.xml -->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="500dp"
+    android:layout_height="300dp"
+    android:padding="20dp"
+    android:background="@drawable/fondo"
+    android:gravity="center">
+
+    <!-- TextView para las pistas -->
+
+    <TextView
+        android:id="@+id/tvPistas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="30sp"
+        android:fontFamily="@font/julee_regular"
+        android:textColor="@color/colorBlack"
+        android:layout_gravity="center"
+        android:textAlignment="center"
+        />
+
+    <!-- Botón para cerrar el diálogo -->
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Entendido"
+        android:background="@drawable/button_rounded"
+        android:textColor="@color/colorWhite"
+        android:layout_gravity="bottom|end"
+        android:id="@+id/btnEntendido"
+        android:fontFamily="@font/julee_regular"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        />
+
+
+</FrameLayout>

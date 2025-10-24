@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- dialog_confirmacion.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorWhite"
+    android:padding="16dp"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/text_irreversible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Introduce la respuesta"
+        android:textColor="@color/colorBlack"
+        android:textSize="15sp"
+        android:layout_marginBottom="8dp"/>
+
+    <EditText
+        android:id="@+id/etRespuesta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Respuesta"
+        android:inputType="number"
+        android:layout_marginBottom="8dp"/>
+
+    <!--RESPUESTA INCORRECTA -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Respuesta incorrecta"
+        android:textColor="@color/colorRed"
+        android:textSize="15sp"
+        android:layout_marginBottom="8dp"
+        android:id="@+id/incorrecta"
+        android:visibility="gone"/>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+
+        <Button
+            android:id="@+id/btnCancelar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/button_rounded"
+            android:textAllCaps="false"
+            android:text="Cancelar" />
+
+        <Button
+            android:id="@+id/btnAceptar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/button_rounded"
+            android:textAllCaps="false"
+            android:text="Continuar" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,251 @@
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBlack"
+    >
+
+    <ImageView
+        android:id="@+id/imageViewFondo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/fondo"
+        android:visibility="visible" />
+
+    <Button
+        android:id="@+id/saltar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|start"
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="40dp"
+        android:background="@color/transparencia"
+        android:fontFamily="@font/julee_regular"
+        android:text="Saltar"
+        android:textAllCaps="false"
+        android:textColor="@color/transparencia"
+        android:textSize="35sp"
+        android:visibility="visible"
+        />
+
+    <TextView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="¡Lo logré, funciona!\n\nHe creado un autómata que hace tareas humanas, pero debo ocultarlo de los invasores.\n\nSi obtienen esta tecnología, nadie podrá detenerlos. Por eso, borré su memoria y lo bloqueé, de modo que solo aquellos capaces de resolver acertijos puedan descubrir mi nombre."
+        android:textColor="@color/colorBlack"
+        android:padding="20dp"
+        android:visibility="visible"
+        android:textAllCaps="false"
+        android:textSize="50sp"
+        android:fontFamily="@font/julee_regular"
+        android:layout_gravity="center"
+        android:textAlignment="center" />
+
+
+    <Button
+        android:id="@+id/exit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Salir"
+        android:textColor="@color/colorWhite"
+        android:visibility="visible"
+        android:textAllCaps="false"
+        android:textSize="35sp"
+        android:background="@drawable/button_rounded"
+        android:fontFamily="@font/julee_regular"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="40dp" />
+
+    <Button
+        android:id="@+id/transparencia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="->"
+        android:textColor="@color/colorWhite"
+        android:visibility="visible"
+        android:textAllCaps="false"
+        android:textSize="35sp"
+        android:background="@drawable/button_rounded"
+        android:fontFamily="@font/julee_regular"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="40dp"
+        android:layout_marginEnd="40dp" />
+
+
+    <Button
+        android:id="@+id/goEnigmaCorrecto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="->"
+        android:textColor="@color/colorWhite"
+        android:visibility="gone"
+        android:textAllCaps="false"
+        android:textSize="35sp"
+        android:background="@drawable/button_rounded"
+        android:fontFamily="@font/julee_regular"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="40dp"
+        android:layout_marginEnd="40dp" />
+
+
+    <Button
+        android:id="@+id/goboton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="->"
+        android:textColor="@color/colorWhite"
+        android:visibility="gone"
+        android:textAllCaps="false"
+        android:textSize="35sp"
+        android:background="@drawable/button_rounded"
+        android:fontFamily="@font/julee_regular"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="40dp"
+        android:layout_marginEnd="40dp" />
+
+
+
+    <ImageView
+        android:id="@+id/imageViewBoton"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:src="@drawable/boton_solo"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        />
+
+
+    <LinearLayout
+        android:id="@+id/imageViewEnigma1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="¿Cuál es la letra que falta?\n¡Introdúzcanla y despierten mi autómata!\nMe dijeron que un calendario me ayudaría pero aún no sé la respuesta"
+            android:textColor="@color/colorBlack"
+            android:padding="20dp"
+            android:visibility="visible"
+            android:textAllCaps="false"
+            android:textSize="40sp"
+            android:fontFamily="@font/julee_regular"
+            android:layout_gravity="center"
+            android:textAlignment="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="S O N -> D\nE F M -> A\nM J J -> _\n"
+            android:textColor="@color/colorBlack"
+            android:padding="20dp"
+            android:visibility="visible"
+            android:textAllCaps="false"
+            android:textSize="60sp"
+            android:fontFamily="@font/julee_regular"
+            android:layout_gravity="center"
+            android:textAlignment="center" />
+
+    </LinearLayout>
+
+
+
+    <EditText
+        android:id="@+id/etRespuesta"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:inputType="textCapCharacters"
+        android:visibility="gone"
+        android:hint=""
+        android:maxLength="1"
+        android:textSize="50sp"
+        android:fontFamily="@font/julee_regular"
+        android:textColor="@color/colorBlack"
+        android:layout_marginTop="118dp"
+        android:layout_marginLeft="106dp"
+        />
+
+
+    <Button
+        android:id="@+id/volverEnigma"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="&lt;-"
+        android:textColor="@color/colorWhite"
+        android:visibility="gone"
+        android:textAllCaps="false"
+        android:textSize="35sp"
+        android:background="@drawable/button_rounded"
+        android:fontFamily="@font/julee_regular"
+        android:layout_gravity="bottom|start"
+        android:layout_marginBottom="40dp"
+        android:layout_marginStart="40dp" />
+
+
+    <Button
+        android:id="@+id/despertar"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:text=""
+        android:visibility="gone"
+        android:background="@color/transparencia"
+        android:layout_gravity="center" />
+
+
+    <Button
+        android:id="@+id/volverIntro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="&lt;-"
+        android:textColor="@color/colorWhite"
+        android:visibility="gone"
+        android:textAllCaps="false"
+        android:textSize="35sp"
+        android:background="@drawable/button_rounded"
+        android:fontFamily="@font/julee_regular"
+        android:layout_gravity="bottom|start"
+        android:layout_marginBottom="40dp"
+        android:layout_marginStart="40dp" />
+
+
+    <Button
+        android:id="@+id/volverIntro_correcta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="&lt;-"
+        android:textColor="@color/colorWhite"
+        android:visibility="gone"
+        android:textAllCaps="false"
+        android:textSize="35sp"
+        android:background="@drawable/button_rounded"
+        android:fontFamily="@font/julee_regular"
+        android:layout_gravity="bottom|start"
+        android:layout_marginBottom="40dp"
+        android:layout_marginStart="40dp" />
+
+
+    <Button
+        android:id="@+id/btnRespuesta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Comprobar"
+        android:textColor="@color/colorWhite"
+        android:visibility="gone"
+        android:textAllCaps="false"
+        android:textSize="40sp"
+        android:background="@drawable/button_rounded"
+        android:fontFamily="@font/julee_regular"
+        android:layout_gravity="center"
+        android:layout_marginTop="270dp" />
+
+
+
+
+</FrameLayout>
