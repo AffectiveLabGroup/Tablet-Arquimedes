@@ -1,14 +1,23 @@
 package com.example.sanbotapp;
 
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
+import android.speech.tts.TextToSpeech;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,24 +51,12 @@ import com.qihancloud.opensdk.function.unit.SystemManager;
 import com.qihancloud.opensdk.function.unit.WheelMotionManager;
 import com.qihancloud.opensdk.function.unit.interfaces.speech.RecognizeListener;
 
-public class IntroSanbotActivity extends TopBaseActivity {
+import java.util.ArrayList;
+import java.util.Locale;
 
-    private SpeechControl speechControl;
-    private FaceRecognitionControl faceRecognitionControl;
-    private SpeechManager speechManager;
-    private MediaManager mediaManager;
-    private SystemControl systemControl;
-    private SystemManager systemManager;
-    private HeadControl headControl;
-    private HeadMotionManager headMotionManager;
-    private WheelControl wheelControl;
-    private WheelMotionManager wheelMotionManager;
-    private HardwareControl hardwareControl;
-    private HardWareManager hardWareManager;
-    private HandsControl handsControl;
-    private HandMotionManager handMotionManager;
+public class IntroSanbotActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
-    private ModuloOpenAIAudioSpeech moduloOpenAISpeechVoice;
+
     private GestionMediaPlayer gestionMediaPlayer;
     private Handler handlerSpeech = new Handler(Looper.getMainLooper());
 
@@ -71,13 +68,15 @@ public class IntroSanbotActivity extends TopBaseActivity {
     private Button exit;
 
     private Intent intent = null;
-
-
-
+    private TextToSpeech tts;
+    private SpeechRecognizer speechRecognizer;
+    private static final int PERMISSION_REQUEST_AUDIO = 1;
 
     @Override
-    protected void onMainServiceConnected() {
-
+    public void onInit(int status){
+        if (status == TextToSpeech.SUCCESS) {
+            tts.setLanguage(new Locale("es", "ES"));
+        }
     }
 
 
@@ -86,8 +85,10 @@ public class IntroSanbotActivity extends TopBaseActivity {
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onCreate(savedInstanceState);
-        onMainServiceConnected();
+
         setContentView(R.layout.explicacion);
+        tts = new TextToSpeech(this, this);
+
 
         // Coger variable respuesta que le ha llegado por parametro
         Intent intentej = getIntent();
@@ -107,26 +108,6 @@ public class IntroSanbotActivity extends TopBaseActivity {
 
         }
 
-
-
-
-        speechManager = (SpeechManager) getUnitManager(FuncConstant.SPEECH_MANAGER);
-        mediaManager = (MediaManager) getUnitManager(FuncConstant.MEDIA_MANAGER);
-        systemManager = (SystemManager) getUnitManager(FuncConstant.SYSTEM_MANAGER);
-        speechControl = new SpeechControl(speechManager);
-        faceRecognitionControl = new FaceRecognitionControl(speechManager, mediaManager);
-        systemControl = new SystemControl(systemManager);
-        headMotionManager = (HeadMotionManager) getUnitManager(FuncConstant.HEADMOTION_MANAGER);
-        headControl = new HeadControl(headMotionManager);
-        wheelMotionManager = (WheelMotionManager) getUnitManager(FuncConstant.WHEELMOTION_MANAGER);
-        wheelControl = new WheelControl(wheelMotionManager);
-        hardWareManager = (HardWareManager) getUnitManager(FuncConstant.HARDWARE_MANAGER);
-        hardwareControl = new HardwareControl(hardWareManager);
-        handMotionManager = (HandMotionManager) getUnitManager(FuncConstant.HANDMOTION_MANAGER);
-        handsControl = new HandsControl(handMotionManager);
-
-        faceRecognitionControl.stopFaceRecognition();
-
         imgFondo = findViewById(R.id.fondo);
         dos = findViewById(R.id.explicacion);
         pista = findViewById(R.id.pista);
@@ -134,104 +115,71 @@ public class IntroSanbotActivity extends TopBaseActivity {
         btnRepetirSuma = findViewById(R.id.btnRepetirSuma);
         exit = findViewById(R.id.exit);
 
-        moduloOpenAISpeechVoice = new ModuloOpenAIAudioSpeech();
         gestionMediaPlayer = new GestionMediaPlayer();
 
-        systemManager.switchFloatBar(false,IntroSanbotActivity.class.getName());
 
 
         setonClicks();
 
-        // Si sanbot detecta la palabra "hola" en el audio, entonces saluda
-        speechManager.setOnSpeechListener(new RecognizeListener() {
+        // Pide permiso para usar el micrófono si hace falta
+        checkAudioPermission();
+
+        // Inicializa el reconocedor de voz
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+        speechRecognizer.setRecognitionListener(new RecognitionListener() {
             @Override
-            public boolean onRecognizeResult(Grammar grammar) {
+            public void onResults(Bundle results) {
+                ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                if (matches != null && !matches.isEmpty()) {
+                    String text = matches.get(0).toLowerCase(Locale.getDefault());
+                    System.out.println("Texto reconocido: " + text);
 
-                System.out.println("Texto reconocido: " + grammar.getText());
-
-                if (grammar.getText().contains("cuatro")||grammar.getText().contains("4")) {
-
-                    try{
-                        Thread.sleep(1000);
-                    }catch (InterruptedException e) {
-                        e.printStackTrace();
+                    if (text.contains("hola")) {
+                        hablar("¡Hola! Encantado de verte otra vez.");
+                    } else if (text.contains("cuatro") || text.contains("4")) {
+                        hablar("¡Genial! Veo que lo vais pillando.");
+                    } else if (text.contains("pista")) {
+                        hablar("¿Quieres una pista? Primero tendrás que intentar resolver el enigma.");
+                    } else {
+                        hablar("Uy, esa no es la respuesta que esperaba. Inténtalo de nuevo.");
                     }
-
-                    dos.setVisibility(View.GONE);
-                    btnRepetirSuma.setVisibility(View.GONE);
-                    btnRepetirPista.setVisibility(View.VISIBLE);
-                    pista.setVisibility(View.VISIBLE);
-
-                    // Expresion feliz
-                    systemControl.cambiarEmocion(EmotionsType.SMILE);
-                    speechControl.hablar("¡Genial! Veo que lo vais pillando.");
-
-                    try{
-                        Thread.sleep(3000);
-                    }catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                    speechControl.hablar("Una cosa más, mientras esteis resolviendo el ejercicio, podéis venir y pedirme una pista. Para ello, siguiendo los pasos de antes, tendréis que decirme la palabra PISTA.");
-
-                    try{
-                        Thread.sleep(13500);
-                    }catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                    speechControl.hablar("Ayudante, elige a alguien del grupo y probemos");
-                    while(speechControl.isRobotHablando()) {
-                    }
-
-                    return true;
-
-                } else if (grammar.getText().contains("pista")) {
-                    try{
-                        Thread.sleep(1000);
-                    }catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    systemControl.cambiarEmocion(EmotionsType.QUESTION);
-                    speechControl.hablar("¿Quieres una pista? Primero tendrás que intentar resolver el enigma");
-
-
-                    try{
-                        Thread.sleep(5000);
-                    }catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                    speechControl.hablar("¡Vamos a ello!");
-
-                    try{
-                        Thread.sleep(1000);
-                    }catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                    startActivity(intent);
-
-                    return true;
-                } else {
-                    speechControl.hablar("Uy, esa no es la repuesta que esperaba, intentalo de nuevo.");
-                    try{
-                        Thread.sleep(3000);
-                    }catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    return true;
                 }
 
+                // Reinicia la escucha tras cada resultado
+                startListening();
             }
 
-            @Override
-            public void onRecognizeVolume(int i) {
-                System.out.println("onRecognizeVolume ----------------------------------------------");
-            }
-
+            @Override public void onReadyForSpeech(Bundle params) {}
+            @Override public void onBeginningOfSpeech() {}
+            @Override public void onRmsChanged(float rmsdB) {}
+            @Override public void onBufferReceived(byte[] buffer) {}
+            @Override public void onEndOfSpeech() {}
+            @Override public void onError(int error) { startListening(); }
+            @Override public void onPartialResults(Bundle partialResults) {}
+            @Override public void onEvent(int eventType, Bundle params) {}
         });
 
+        // Empieza a escuchar
+        startListening();
+    }
+
+    private void startListening() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "es-ES");
+        speechRecognizer.startListening(intent);
+    }
+    private void hablar(String text) {
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
+    }
+
+    private void checkAudioPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.RECORD_AUDIO},
+                    PERMISSION_REQUEST_AUDIO);
+        }
     }
 
     public void setonClicks() {
@@ -271,7 +219,7 @@ public class IntroSanbotActivity extends TopBaseActivity {
         btnRepetirSuma.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                speechControl.hablar("Mi ayudante elegirá a un voluntario que me diga el resultado de la suma que se puede ver en mi pantalla, recordar" +
+                hablar("Mi ayudante elegirá a un voluntario que me diga el resultado de la suma que se puede ver en mi pantalla, recordar" +
                         "que teneis que tocar mi cabeza y esperar a que mis orejas se pongan de color verde antes de decirme la respuesta");
 
             }
@@ -280,7 +228,7 @@ public class IntroSanbotActivity extends TopBaseActivity {
         btnRepetirPista.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                speechControl.hablar("Al igual que hemos hecho antes con la suma, mi ayudante va a elegir a un voluntario para que me diga la palabra PISTA");
+                hablar("Al igual que hemos hecho antes con la suma, mi ayudante va a elegir a un voluntario para que me diga la palabra PISTA");
 
             }
         });
@@ -305,84 +253,23 @@ public class IntroSanbotActivity extends TopBaseActivity {
                     @Override
                     public void run() {
 
-                        systemControl.cambiarEmocion(EmotionsType.GOODBYE);
-                        hardwareControl.encenderLED(LED.PART_ALL, LED.MODE_PINK);
+                        hablar("Soy un poco tímida, por lo que agradecería que me hablarais de uno en uno");
 
-                        AbsoluteAngleHandMotion absoluteAngleHandMotion = new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH, 5, 30);
-                        handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
+                        hablar("Aún sigo un poco confusa.");
 
+                        hablar("Mi ayudante se encargará de elegir a una persona para hablar conmigo.");
 
-                        speechControl.hablar("Soy un poco tímida, por lo que agradecería que me hablarais de uno en uno");
+                        hablar("Cuando tengais la respuesta podéis acercaros y tocarme la cabeza");
 
-                        try {
-                            Thread.sleep(6000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-                        hardwareControl.apagarLED(LED.PART_ALL);
-
-                        absoluteAngleHandMotion = new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH, 5, 170);
-                        handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
-
-                        systemControl.cambiarEmocion(EmotionsType.FAINT);
-                        speechControl.hablar("Aún sigo un poco confusa.");
-
-
-                        try {
-                            Thread.sleep(4500);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-                        // TODO: HACER PARIPE DE QUE ME ELIGE COMO AYUDANTE
-                        systemControl.cambiarEmocion(EmotionsType.SMILE);
-                        speechControl.hablar("Mi ayudante se encargará de elegir a una persona para hablar conmigo.");
-
-
-                        try {
-                            Thread.sleep(7000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-                        speechControl.hablar("Cuando tengais la respuesta podéis acercaros y tocarme la cabeza");
-
-
-                        try {
-                            Thread.sleep(7000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-                        hardwareControl.encenderLED(LED.PART_LEFT_HEAD, LED.MODE_GREEN);
-                        hardwareControl.encenderLED(LED.PART_RIGHT_HEAD, LED.MODE_GREEN);
-
-
-                        speechControl.hablar("Cuando mis orejas estén de color verde como ahora, podréis decirme la respuesta.");
-
-                        try {
-                            Thread.sleep(7000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-                        hardwareControl.encenderLED(LED.PART_ALL, LED.MODE_CLOSE);
-
+                        hablar("Cuando mis orejas estén de color verde como ahora, podréis decirme la respuesta.");
 
 
                         imgFondo.setVisibility(View.VISIBLE);
                         dos.setVisibility(View.VISIBLE);
                         exit.setVisibility(View.VISIBLE);
                         btnRepetirSuma.setVisibility(View.VISIBLE);
-                        speechControl.hablar("¡Hagamos una prueba!, ayudante, elige a un voluntario que me diga el resultado de la suma que se puede ver en mi pantalla");
+                        hablar("¡Hagamos una prueba!, ayudante, elige a un voluntario que me diga el resultado de la suma que se puede ver en mi pantalla");
 
-
-                        try {
-                            Thread.sleep(7000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
 
                     }
                 }, 500);  // Retraso de 500 ms para que la imagen se cargue primero
@@ -412,6 +299,15 @@ public class IntroSanbotActivity extends TopBaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (tts != null) {
+            tts.stop();
+            tts.shutdown();
+        }
+        super.onDestroy();
     }
 
 

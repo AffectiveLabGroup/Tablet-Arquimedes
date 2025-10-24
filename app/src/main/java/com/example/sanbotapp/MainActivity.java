@@ -27,6 +27,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 
 public class MainActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
@@ -62,7 +64,11 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     private boolean siguienteAccion = false;
 
     @Override
-    public void onInit(int status){}
+    public void onInit(int status){
+        if (status == TextToSpeech.SUCCESS) {
+            tts.setLanguage(new Locale("es", "ES"));
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
