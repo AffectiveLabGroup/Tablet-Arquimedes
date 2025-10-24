@@ -12,7 +12,9 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.speech.tts.TextToSpeech;
 import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,41 +26,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.sanbotapp.gestion.GestionMediaPlayer;
-import com.example.sanbotapp.moduloOpenAI.ModuloOpenAIAudioSpeech;
-import com.example.sanbotapp.robotControl.FaceRecognitionControl;
-import com.example.sanbotapp.robotControl.HeadControl;
-import com.example.sanbotapp.robotControl.SpeechControl;
-import com.example.sanbotapp.robotControl.SystemControl;
-import com.example.sanbotapp.robotControl.WheelControl;
-import com.qihancloud.opensdk.base.TopBaseActivity;
-import com.qihancloud.opensdk.beans.FuncConstant;
-import com.qihancloud.opensdk.beans.OperationResult;
-import com.qihancloud.opensdk.function.beans.EmotionsType;
-import com.qihancloud.opensdk.function.beans.handmotion.AbsoluteAngleHandMotion;
-import com.qihancloud.opensdk.function.beans.headmotion.AbsoluteAngleHeadMotion;
-import com.qihancloud.opensdk.function.unit.HandMotionManager;
-import com.qihancloud.opensdk.function.unit.HeadMotionManager;
-import com.qihancloud.opensdk.function.unit.MediaManager;
-import com.qihancloud.opensdk.function.unit.SpeechManager;
-import com.qihancloud.opensdk.function.unit.SystemManager;
-import com.qihancloud.opensdk.function.unit.WheelMotionManager;
 
-public class MainActivity extends TopBaseActivity {
-
-    private SpeechControl speechControl;
-    private FaceRecognitionControl faceRecognitionControl;
-    private SpeechManager speechManager;
-    private MediaManager mediaManager;
-    private SystemControl systemControl;
-    private SystemManager systemManager;
-    private HeadControl headControl;
-    private HeadMotionManager headMotionManager;
-    private WheelControl wheelControl;
-    private WheelMotionManager wheelMotionManager;
-    private HandMotionManager handMotionManager;
+public class MainActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
     private Button transparencia;
     private Button volverIntro;
@@ -80,6 +50,8 @@ public class MainActivity extends TopBaseActivity {
 
     private Intent intentG = null;
 
+    private TextToSpeech tts;
+
     private Runnable sleepRunnable;
     private Handler handlerSleep = new Handler();
 
@@ -89,32 +61,19 @@ public class MainActivity extends TopBaseActivity {
 
     private boolean siguienteAccion = false;
 
-
     @Override
-    protected void onMainServiceConnected() {
-
-    }
+    public void onInit(int status){}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onCreate(savedInstanceState);
-        onMainServiceConnected();
         setContentView(R.layout.activity_main);
 
-        speechManager = (SpeechManager) getUnitManager(FuncConstant.SPEECH_MANAGER);
-        mediaManager = (MediaManager) getUnitManager(FuncConstant.MEDIA_MANAGER);
-        systemManager = (SystemManager) getUnitManager(FuncConstant.SYSTEM_MANAGER);
-        speechControl = new SpeechControl(speechManager);
-        faceRecognitionControl = new FaceRecognitionControl(speechManager, mediaManager);
-        systemControl = new SystemControl(systemManager);
-        headMotionManager = (HeadMotionManager) getUnitManager(FuncConstant.HEADMOTION_MANAGER);
-        headControl = new HeadControl(headMotionManager);
-        wheelMotionManager = (WheelMotionManager) getUnitManager(FuncConstant.WHEELMOTION_MANAGER);
-        wheelControl = new WheelControl(wheelMotionManager);
+        tts = new TextToSpeech(this, this);
+
         audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-        handMotionManager = (HandMotionManager) getUnitManager(FuncConstant.HANDMOTION_MANAGER);
 
         transparencia = findViewById(R.id.transparencia);
         volverIntro = findViewById(R.id.volverIntro);
@@ -132,8 +91,6 @@ public class MainActivity extends TopBaseActivity {
         fondo = findViewById(R.id.imageViewFondo);
         saltar = findViewById(R.id.saltar);
 
-
-        faceRecognitionControl.stopFaceRecognition();
 
         mp1 = MediaPlayer.create(MainActivity.this,R.raw.error);
         mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -155,12 +112,8 @@ public class MainActivity extends TopBaseActivity {
 
         setonClicks();
 
-        systemManager.switchFloatBar(false,MainActivity.class.getName());
     }
 
-    public OperationResult switchFloatBar(boolean isShow,String className){
-        return systemManager.switchFloatBar(isShow,className);
-    }
 
     // Una vez iniciada la aplicacion quiero que el robot me salude
     @Override
@@ -171,35 +124,9 @@ public class MainActivity extends TopBaseActivity {
             @Override
             public void run() {
                 imgFondo.setVisibility(View.VISIBLE);
-                // Bajar cabeza
-                headControl.controlBasicoCabeza(HeadControl.AccionesCabeza.ABAJO);
             }
         }, 100);
 
-        // Iniciar el ciclo de "sleep"
-        iniciarCicloSleep();
-
-    }
-
-    private void iniciarCicloSleep() {
-        // Crear un runnable que aplicará la emoción de "sleep" cada cierto tiempo
-        sleepRunnable = new Runnable() {
-            @Override
-            public void run() {
-                systemControl.cambiarEmocion(EmotionsType.SLEEP);
-                // Reprogramar para que se ejecute nuevamente en 18 segundos
-                handlerSleep.postDelayed(this, 8000); // 8,000 ms = 8 segundos
-            }
-        };
-        // Iniciar la primera ejecución del runnable
-        handlerSleep.post(sleepRunnable);
-    }
-
-    private void detenerCicloSleep() {
-        // Detener la ejecución del ciclo de "sleep"
-        if (handlerSleep != null) {
-            handlerSleep.removeCallbacks(sleepRunnable);
-        }
     }
 
     public void setonClicks() {
@@ -249,7 +176,6 @@ public class MainActivity extends TopBaseActivity {
                 builder.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        headControl.controlBasicoCabeza(HeadControl.AccionesCabeza.CENTRO);
                         finishAffinity();
                         System.exit(0);
                     }
@@ -525,142 +451,29 @@ public class MainActivity extends TopBaseActivity {
     }
 
 
-
+    private void hablar(String text) {
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
+    }
     public void despertar() {
-        speechControl.setVelocidadHabla(35);
-        speechControl.setEntonacionHabla(50);
+        //Abrir ojos
 
-        // Levantar cabeza
+        hablar("Vaya, parece que me he quedado dormida...");
 
-        headControl.controlBasicoCabeza(HeadControl.AccionesCabeza.ARRIBA);
+        hablar("No sé donde estoy...");
 
-        detenerCicloSleep();
+        hablar("Todo esto es muy raro..., no recuerdo nada... ");
 
+        hablar("Me siento muy confusa...");
 
-        //Mover a la izquierda
-        wheelControl.controlBasicoRuedas(WheelControl.AccionesRuedas.IZQUIERDA);
+        hablar("Perdón si os he asustado, me llamo Lola.");
 
-        wheelControl.controlBasicoRuedas(WheelControl.AccionesRuedas.DERECHA);
+        hablar("¡Mi creador me comentó que conocería nuevos amigos! ¡Estoy segura de que sois vosotros! Tengo que descubrir el nombre de mi creador y no puedo hacerlo sin vuestra ayuda.");
 
+        Intent intentej = new Intent(MainActivity.this, IntroSanbotActivity.class);
+        // Pasar el intent a string para poder pasarlo a la siguiente pantalla
 
-        //Mover a la derecha
-        wheelControl.controlBasicoRuedas(WheelControl.AccionesRuedas.DERECHA);
-        wheelControl.controlBasicoRuedas(WheelControl.AccionesRuedas.IZQUIERDA);
-
-
-        //Girar sobre si mismo
-        wheelControl.controlBasicoRuedas(WheelControl.AccionesRuedas.GIRAR);
-
-
-        // Expresión perdido
-        systemControl.cambiarEmocion(EmotionsType.NORMAL);
-
-        // Mover cabeza
-        AbsoluteAngleHeadMotion absoluteAngleHeadMotion = new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_HORIZONTAL,10);
-        headMotionManager.doAbsoluteAngleMotion(absoluteAngleHeadMotion);
-
-        speechControl.hablar("Vaya, parece que me he quedado dormida...");
-
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        absoluteAngleHeadMotion = new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_HORIZONTAL,110);
-        headMotionManager.doAbsoluteAngleMotion(absoluteAngleHeadMotion);
-
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        speechControl.hablar("No sé donde estoy...");
-
-
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        headControl.controlBasicoCabeza(HeadControl.AccionesCabeza.CENTRO);
-
-        speechControl.hablar("Todo esto es muy raro..., no recuerdo nada... ");
-
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        systemControl.cambiarEmocion(EmotionsType.FAINT);
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        speechControl.hablar("Me siento muy confusa...");
-
-
-        try {
-            Thread.sleep(3500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        systemControl.cambiarEmocion(EmotionsType.NORMAL);
-
-        AbsoluteAngleHandMotion absoluteAngleHandMotion = new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_RIGHT, 5, 30);
-        handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        speechControl.hablar("Perdón si os he asustado, me llamo Lola.");
-
-        try {
-            Thread.sleep(4000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        absoluteAngleHandMotion = new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_RIGHT, 5, 170);
-        handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        // Expresión feliz
-        systemControl.cambiarEmocion(EmotionsType.SMILE);
-
-        speechControl.hablar("¡Mi creador me comentó que conocería nuevos amigos! ¡Estoy segura de que sois vosotros! Tengo que descubrir el nombre de mi creador y no puedo hacerlo sin vuestra ayuda.");
-
-        try {
-            Thread.sleep(12000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        // Me gustaría pasar la variable global de la respuesta a la siguiente pantalla
-
-            Intent intentej = new Intent(MainActivity.this, IntroSanbotActivity.class);
-            // Pasar el intent a string para poder pasarlo a la siguiente pantalla
-
-            intentej.putExtra("intentgo", intentgo);
-            startActivity(intentej);
-
-
-
+        intentej.putExtra("intentgo", intentgo);
+        startActivity(intentej);
 
     }
 
@@ -686,6 +499,15 @@ public class MainActivity extends TopBaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (tts != null) {
+            tts.stop();
+            tts.shutdown();
+        }
+        super.onDestroy();
     }
 
 
