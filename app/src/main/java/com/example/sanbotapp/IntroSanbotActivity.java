@@ -146,7 +146,7 @@ public class IntroSanbotActivity extends AppCompatActivity implements TextToSpee
                 }
 
                 // Reinicia la escucha tras cada resultado
-                startListening();
+                //startListening();
             }
 
             @Override public void onReadyForSpeech(Bundle params) {}
@@ -154,13 +154,13 @@ public class IntroSanbotActivity extends AppCompatActivity implements TextToSpee
             @Override public void onRmsChanged(float rmsdB) {}
             @Override public void onBufferReceived(byte[] buffer) {}
             @Override public void onEndOfSpeech() {}
-            @Override public void onError(int error) { startListening(); }
+            @Override public void onError(int error) { /*startListening(); */}
             @Override public void onPartialResults(Bundle partialResults) {}
             @Override public void onEvent(int eventType, Bundle params) {}
         });
 
         // Empieza a escuchar
-        startListening();
+        //startListening();
     }
 
     private void startListening() {
@@ -269,7 +269,7 @@ public class IntroSanbotActivity extends AppCompatActivity implements TextToSpee
                         exit.setVisibility(View.VISIBLE);
                         btnRepetirSuma.setVisibility(View.VISIBLE);
                         hablar("¡Hagamos una prueba!, ayudante, elige a un voluntario que me diga el resultado de la suma que se puede ver en mi pantalla");
-
+                        
 
                     }
                 }, 500);  // Retraso de 500 ms para que la imagen se cargue primero
