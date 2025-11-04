@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -27,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.HashMap;
 import java.util.Locale;
 
 
@@ -458,7 +460,15 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
 
     private void hablar(String text) {
-        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // Para API 21 y superiores
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "utteranceId");
+        } else {
+            // Para API 19–20
+            HashMap<String, String> params = new HashMap<>();
+            params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "utteranceId");
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, params);
+        }
     }
     public void despertar() {
         //Abrir ojos

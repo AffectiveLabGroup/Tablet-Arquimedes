@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -52,6 +53,7 @@ import com.qihancloud.opensdk.function.unit.WheelMotionManager;
 import com.qihancloud.opensdk.function.unit.interfaces.speech.RecognizeListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 
 public class IntroSanbotActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
@@ -65,6 +67,7 @@ public class IntroSanbotActivity extends AppCompatActivity implements TextToSpee
     private TextView pista;
     private Button btnRepetirSuma;
     private Button btnRepetirPista;
+    private Button btnHablar;
     private Button exit;
 
     private Intent intent = null;
@@ -114,6 +117,8 @@ public class IntroSanbotActivity extends AppCompatActivity implements TextToSpee
         btnRepetirPista = findViewById(R.id.btnRepetirPista);
         btnRepetirSuma = findViewById(R.id.btnRepetirSuma);
         exit = findViewById(R.id.exit);
+        btnHablar = findViewById(R.id.hablar);
+
 
         gestionMediaPlayer = new GestionMediaPlayer();
 
@@ -138,6 +143,27 @@ public class IntroSanbotActivity extends AppCompatActivity implements TextToSpee
                         hablar("¡Hola! Encantado de verte otra vez.");
                     } else if (text.contains("cuatro") || text.contains("4")) {
                         hablar("¡Genial! Veo que lo vais pillando.");
+
+                        dos.setVisibility(View.GONE);
+                        btnRepetirSuma.setVisibility(View.GONE);
+                        btnRepetirPista.setVisibility(View.VISIBLE);
+                        pista.setVisibility(View.VISIBLE);
+
+                        try{
+                            Thread.sleep(3000);
+                        }catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        hablar("Una cosa más, mientras esteis resolviendo el ejercicio, podéis venir y pedirme una pista. Para ello, siguiendo los pasos de antes, tendréis que decirme la palabra PISTA.");
+
+                        try{
+                            Thread.sleep(13500);
+                        }catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        hablar("Ayudante, elige a alguien del grupo y probemos");
                     } else if (text.contains("pista")) {
                         hablar("¿Quieres una pista? Primero tendrás que intentar resolver el enigma.");
                     } else {
@@ -145,8 +171,6 @@ public class IntroSanbotActivity extends AppCompatActivity implements TextToSpee
                     }
                 }
 
-                // Reinicia la escucha tras cada resultado
-                //startListening();
             }
 
             @Override public void onReadyForSpeech(Bundle params) {}
@@ -159,8 +183,6 @@ public class IntroSanbotActivity extends AppCompatActivity implements TextToSpee
             @Override public void onEvent(int eventType, Bundle params) {}
         });
 
-        // Empieza a escuchar
-        //startListening();
     }
 
     private void startListening() {
@@ -170,7 +192,15 @@ public class IntroSanbotActivity extends AppCompatActivity implements TextToSpee
         speechRecognizer.startListening(intent);
     }
     private void hablar(String text) {
-        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // Para API 21 y superiores
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "utteranceId");
+        } else {
+            // Para API 19–20
+            HashMap<String, String> params = new HashMap<>();
+            params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "utteranceId");
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, params);
+        }
     }
 
     private void checkAudioPermission() {
@@ -232,6 +262,13 @@ public class IntroSanbotActivity extends AppCompatActivity implements TextToSpee
 
             }
         });
+
+        btnHablar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startListening();
+            }
+        });
     }
 
 
@@ -268,6 +305,7 @@ public class IntroSanbotActivity extends AppCompatActivity implements TextToSpee
                         dos.setVisibility(View.VISIBLE);
                         exit.setVisibility(View.VISIBLE);
                         btnRepetirSuma.setVisibility(View.VISIBLE);
+                        btnHablar.setVisibility(View.VISIBLE);
                         hablar("¡Hagamos una prueba!, ayudante, elige a un voluntario que me diga el resultado de la suma que se puede ver en mi pantalla");
                         
 
