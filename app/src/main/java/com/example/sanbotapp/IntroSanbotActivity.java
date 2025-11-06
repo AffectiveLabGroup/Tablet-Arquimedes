@@ -166,6 +166,21 @@ public class IntroSanbotActivity extends AppCompatActivity implements TextToSpee
                         hablar("Ayudante, elige a alguien del grupo y probemos");
                     } else if (text.contains("pista")) {
                         hablar("¿Quieres una pista? Primero tendrás que intentar resolver el enigma.");
+                        try{
+                            Thread.sleep(5000);
+                        }catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        hablar("¡Vamos a ello!");
+
+                        try{
+                            Thread.sleep(1000);
+                        }catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        startActivity(intent);
                     } else {
                         hablar("Uy, esa no es la respuesta que esperaba. Inténtalo de nuevo.");
                     }
