@@ -176,8 +176,8 @@ public class Enigma3Activity extends AppCompatActivity implements TextToSpeech.O
                         //TODO: MANDAR A LA SIGUIENTE ACTIVIDAD E INTRODUCIR QUE VA A HACER UNA PRESENTACIÓN SOBRE ARQUÍMEDES
 
 
-                        //Intent intent = new Intent(Enigma3Activity.this, ArquimedesActivity.class);
-                        //startActivity(intent);
+                        Intent intent = new Intent(Enigma3Activity.this, ArquimedesActivity.class);
+                        startActivity(intent);
                     } else{
 
                         // ofrecer más respuestas variadas
@@ -624,12 +624,7 @@ public class Enigma3Activity extends AppCompatActivity implements TextToSpeech.O
                 });
 
                 // Configurar tamaño del diálogo según el diseño inflado
-                dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                    @Override
-                    public void onShow(DialogInterface dialogInterface) {
-                        dialog.getWindow().setLayout(1400, 800); // Ajustar a las dimensiones exactas de la imagen de fondo
-                    }
-                });
+
 
                 dialog.show();
 
@@ -665,7 +660,7 @@ public class Enigma3Activity extends AppCompatActivity implements TextToSpeech.O
                     // Cargar la tipografía personalizada
                     Typeface customFont = ResourcesCompat.getFont(Enigma3Activity.this, R.font.julee_regular);
                     messageView.setTypeface(customFont);
-                    messageView.setText("Para continuar con la exposición teneis que decirme el nombre de mi creador"); // Texto del mensaje
+                    messageView.setText("Para continuar con la exposición tenéis que decirme el nombre de mi creador"); // Texto del mensaje
 
                     btnAceptar.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -677,12 +672,7 @@ public class Enigma3Activity extends AppCompatActivity implements TextToSpeech.O
                     });
 
                     // Configurar tamaño del diálogo según el diseño inflado
-                    dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                        @Override
-                        public void onShow(DialogInterface dialogInterface) {
-                            dialog.getWindow().setLayout(1400, 800); // Ajustar a las dimensiones exactas de la imagen de fondo
-                        }
-                    });
+
 
                     dialog.show();
                 }

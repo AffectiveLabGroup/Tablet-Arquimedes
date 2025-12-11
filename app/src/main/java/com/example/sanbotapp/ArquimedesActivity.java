@@ -1,12 +1,22 @@
 package com.example.sanbotapp;
 
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
+import android.speech.tts.TextToSpeech;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,26 +51,14 @@ import com.qihancloud.opensdk.function.unit.SystemManager;
 import com.qihancloud.opensdk.function.unit.WheelMotionManager;
 import com.qihancloud.opensdk.function.unit.interfaces.speech.RecognizeListener;
 
-public class ArquimedesActivity extends TopBaseActivity {
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Locale;
 
-    private SpeechControl speechControl;
-    private FaceRecognitionControl faceRecognitionControl;
-    private SpeechManager speechManager;
-    private MediaManager mediaManager;
-    private SystemControl systemControl;
-    private SystemManager systemManager;
-    private HeadControl headControl;
-    private HeadMotionManager headMotionManager;
-    private WheelControl wheelControl;
-    private WheelMotionManager wheelMotionManager;
-    private HardwareControl hardwareControl;
-    private HardWareManager hardWareManager;
-    private HandsControl handsControl;
-    private HandMotionManager handMotionManager;
-    private ProjectorManager projectorManager;
+public class ArquimedesActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
-    private ModuloOpenAIAudioSpeech moduloOpenAISpeechVoice;
-    private GestionMediaPlayer gestionMediaPlayer;
+
+
     private Handler handlerSpeech = new Handler(Looper.getMainLooper());
 
     private ImageView arq1;
@@ -69,49 +67,32 @@ public class ArquimedesActivity extends TopBaseActivity {
 
     private Button exit;
 
+    private TextToSpeech tts;
+    private SpeechRecognizer speechRecognizer;
+    private static final int PERMISSION_REQUEST_AUDIO = 1;
 
 
     @Override
-    protected void onMainServiceConnected() {
-
+    public void onInit(int status){
+        if (status == TextToSpeech.SUCCESS) {
+            tts.setLanguage(new Locale("es", "ES"));
+        }
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onCreate(savedInstanceState);
-        onMainServiceConnected();
         setContentView(R.layout.arquimedes);
 
-        speechManager = (SpeechManager) getUnitManager(FuncConstant.SPEECH_MANAGER);
-        mediaManager = (MediaManager) getUnitManager(FuncConstant.MEDIA_MANAGER);
-        systemManager = (SystemManager) getUnitManager(FuncConstant.SYSTEM_MANAGER);
-        speechControl = new SpeechControl(speechManager);
-        faceRecognitionControl = new FaceRecognitionControl(speechManager, mediaManager);
-        systemControl = new SystemControl(systemManager);
-        headMotionManager = (HeadMotionManager) getUnitManager(FuncConstant.HEADMOTION_MANAGER);
-        headControl = new HeadControl(headMotionManager);
-        wheelMotionManager = (WheelMotionManager) getUnitManager(FuncConstant.WHEELMOTION_MANAGER);
-        wheelControl = new WheelControl(wheelMotionManager);
-        hardWareManager = (HardWareManager) getUnitManager(FuncConstant.HARDWARE_MANAGER);
-        hardwareControl = new HardwareControl(hardWareManager);
-        handMotionManager = (HandMotionManager) getUnitManager(FuncConstant.HANDMOTION_MANAGER);
-        handsControl = new HandsControl(handMotionManager);
-        projectorManager = (ProjectorManager) getUnitManager(FuncConstant.PROJECTOR_MANAGER);
+        tts = new TextToSpeech(this, this);
 
         exit = findViewById(R.id.exit);
-        faceRecognitionControl.stopFaceRecognition();
 
         arq1 = findViewById(R.id.arq1);
         arq2 = findViewById(R.id.arq2);
         arq3 = findViewById(R.id.arq3);
-
-        moduloOpenAISpeechVoice = new ModuloOpenAIAudioSpeech();
-        gestionMediaPlayer = new GestionMediaPlayer();
-
-        systemManager.switchFloatBar(false, ArquimedesActivity.class.getName());
 
 
         exit.setOnClickListener(new View.OnClickListener() {
@@ -126,7 +107,6 @@ public class ArquimedesActivity extends TopBaseActivity {
                 builder.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        projectorManager.switchProjector(false);
                         finishAffinity();
                         System.exit(0);
                     }
@@ -146,17 +126,20 @@ public class ArquimedesActivity extends TopBaseActivity {
             }
         });
 
-        speechManager.setOnSpeechListener(new RecognizeListener() {
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+        speechRecognizer.setRecognitionListener(new RecognitionListener() {// Si sanbot detecta la palabra "hola" en el audio, entonces saluda
             @Override
-            public boolean onRecognizeResult(Grammar grammar) {
+            public void onResults(Bundle results) {
+                ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                if (matches != null && !matches.isEmpty()) {
+                    String text = matches.get(0).toLowerCase(Locale.getDefault());
 
-                System.out.println("Texto reconocido: " + grammar.getText());
 
-                if (grammar.getText().contains("eureka") || grammar.getText().contains("eureca") || grammar.getText().contains("Eureka")) {
+                    System.out.println("Texto reconocido: " + text);
 
-                    speechControl.hablar("Exacto Eureka, ¡Hasta la próxima! ¡Eureka! ¡Eureka! Gracias por despertarme y ayudarme a recordar el nombre de mi creador");
+                if (text.contains("eureka") || text.contains("eureca") || text.contains("Eureka")) {
 
-                    hardwareControl.encenderLED(LED.PART_ALL, LED.MODE_FLICKER_GREEN);
+                    hablar("Exacto Eureka, ¡Hasta la próxima! ¡Eureka! ¡Eureka! Gracias por despertarme y ayudarme a recordar el nombre de mi creador");
 
                     try{
                         Thread.sleep(5000);
@@ -164,20 +147,18 @@ public class ArquimedesActivity extends TopBaseActivity {
                         e.printStackTrace();
                     }
 
-                } else if( grammar.getText().contains("oro") ) {
-
-                    speechControl.hablar("Sí, debía ser un objeto de oro, pero ¿qué más debía tener para que Arquímedes pudiera demostrar que no era de oro puro?");
+                } else if( text.contains("oro") ) {
+                    hablar("Sí, debía ser un objeto de oro, pero ¿qué más debía tener para que Arquímedes pudiera demostrar que no era de oro puro?");
 
                     try {
                         Thread.sleep(5000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    return true;
 
-                } else if( grammar.getText().contains("mismo peso") ) {
+                } else if( text.contains("mismo peso") ) {
 
-                    speechControl.hablar("Casi, casi, ¿Mismo peso el qué?");
+                    hablar("Casi, casi, ¿Mismo peso el qué?");
 
                     try {
                         Thread.sleep(2000);
@@ -185,7 +166,6 @@ public class ArquimedesActivity extends TopBaseActivity {
                         e.printStackTrace();
                     }
 
-                    return true;
 
                 }
 
@@ -194,13 +174,13 @@ public class ArquimedesActivity extends TopBaseActivity {
                     int random = (int) (Math.random() * 3) + 1;
                     switch (random) {
                         case 1:
-                            speechControl.hablar("¡Vaya! Esa no es la respuesta correcta, inténtalo de nuevo.");
+                            hablar("¡Vaya! Esa no es la respuesta correcta, inténtalo de nuevo.");
                             break;
                         case 2:
-                            speechControl.hablar("No, esa no es la respuesta que esperaba, vuelve a intentarlo.");
+                            hablar("No, esa no es la respuesta que esperaba, vuelve a intentarlo.");
                             break;
                         case 3:
-                            speechControl.hablar("Piensa un poquito más, seguro que lo consigues.");
+                            hablar("Piensa un poquito más, seguro que lo consigues.");
                             break;
                     }
                     try {
@@ -208,20 +188,53 @@ public class ArquimedesActivity extends TopBaseActivity {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    return true;
                 }
 
-                return false;
-
+                }
             }
 
-            @Override
-            public void onRecognizeVolume(int i) {
-                System.out.println("onRecognizeVolume ----------------------------------------------");
-            }
-        });
+
+        @Override public void onReadyForSpeech(Bundle params) {}
+        @Override public void onBeginningOfSpeech() {}
+        @Override public void onRmsChanged(float rmsdB) {}
+        @Override public void onBufferReceived(byte[] buffer) {}
+        @Override public void onEndOfSpeech() {}
+        @Override public void onError(int error) { /*startListening(); */}
+        @Override public void onPartialResults(Bundle partialResults) {}
+        @Override public void onEvent(int eventType, Bundle params) {}
+
+    });
 
 
+    }
+
+
+
+    private void startListening() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "es-ES");
+        speechRecognizer.startListening(intent);
+    }
+    private void hablar(String text) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // Para API 21 y superiores
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "utteranceId");
+        } else {
+            // Para API 19–20
+            HashMap<String, String> params = new HashMap<>();
+            params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "utteranceId");
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, params);
+        }
+    }
+
+    private void checkAudioPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.RECORD_AUDIO},
+                    PERMISSION_REQUEST_AUDIO);
+        }
     }
 
 
@@ -233,78 +246,24 @@ public class ArquimedesActivity extends TopBaseActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                preguntarSiProyectar(); // Llamada al método para mostrar el diálogo
+                iniciarSaludo2(); // Llamada al método para mostrar el diálogo
             }
         }, 500); // Retraso de 500ms para asegurarse de que la interfaz esté lista
     }
 
-    private void preguntarSiProyectar() {
-        // Crear el diálogo
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("¿Deseas que proyecte la presentación?")
-                .setCancelable(false)
-                .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Acción cuando el usuario elige "Sí"
-                        proyectarPresentacion();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Acción cuando el usuario elige "No"
-                        iniciarSaludo2();
-                    }
-                });
-
-        // Mostrar el diálogo
-        AlertDialog alert = builder.create();
-        alert.show();
-    }
-
-    private void proyectarPresentacion() {
-        // Aquí iría el código para iniciar la proyección
-        projectorManager.switchProjector(true);
-
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        projectorManager.setMode(ProjectorManager.MODE_WALL);
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        projectorManager.setBright(31);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        projectorManager.setTrapezoidV(30);
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        iniciarSaludo2();
-    }
 
 
         private void iniciarSaludo2() {
             new Thread(() -> {
                 try {
                     // Primer diálogo
-                    speechControl.hablar("Estoy muy contenta de que hayáis conseguido llegar hasta aquí.");
+                    hablar("Estoy muy contenta de que hayáis conseguido llegar hasta aquí.");
                     Thread.sleep(5500);
 
-                    speechControl.hablar("Arquímedes fue mi creador, un gran matemático, físico, ingeniero, inventor y astrónomo griego.");
+                    hablar("Arquímedes fue mi creador, un gran matemático, físico, ingeniero, inventor y astrónomo griego.");
                     Thread.sleep(9000);
 
-                    speechControl.hablar("No sé cómo se me pudo olvidar su nombre, pero gracias a vosotros he podido recordarlo.");
+                    hablar("No sé cómo se me pudo olvidar su nombre, pero gracias a vosotros he podido recordarlo.");
                     Thread.sleep(6000);
 
                     // Cambio de imágenes (debe ejecutarse en el hilo de la UI)
@@ -315,23 +274,23 @@ public class ArquimedesActivity extends TopBaseActivity {
                     Thread.sleep(1000);
 
                     // Tercera parte del diálogo
-                    speechControl.hablar("Una de las historias más famosas sobre Arquímedes es la del baño.");
+                    hablar("Una de las historias más famosas sobre Arquímedes es la del baño.");
                     Thread.sleep(5500);
 
-                    speechControl.hablar("Cuenta la historia que Arquímedes recibió un encargo del rey Herión, que quería saber si la corona que había adquirido era realmente de oro.");
+                    hablar("Cuenta la historia que Arquímedes recibió un encargo del rey Herión, que quería saber si la corona que había adquirido era realmente de oro.");
                     Thread.sleep(10000);
 
-                    speechControl.hablar("Un día, mientras se bañaba, dio con la solución. Descubrió el principio de la flotación al ver cómo el agua se desbordaba al entrar en la bañera.");
+                    hablar("Un día, mientras se bañaba, dio con la solución. Descubrió el principio de la flotación al ver cómo el agua se desbordaba al entrar en la bañera.");
                     Thread.sleep(11000);
 
-                    speechControl.hablar("Entusiasmado por su descubrimiento, salió corriendo gritando '¡Eureka! ¡Eureka!'. Que en griego significa ¡Lo he encontrado! ");
+                    hablar("Entusiasmado por su descubrimiento, salió corriendo gritando '¡Eureka! ¡Eureka!'. Que en griego significa ¡Lo he encontrado! ");
                     Thread.sleep(9000);
 
                     // Última parte del diálogo
-                    speechControl.hablar("Arquímedes pensó que si introducía la corona en la bañera, podía descubrir de qué estaba hecha midiendo el volumen de agua que desbordaba, que sería diferente según el material del que estuviera hecha.\n");
+                    hablar("Arquímedes pensó que si introducía la corona en la bañera, podía descubrir de qué estaba hecha midiendo el volumen de agua que desbordaba, que sería diferente según el material del que estuviera hecha.\n");
                     Thread.sleep(16000);
 
-                    speechControl.hablar("Espero que os haya gustado la historia de Arquímedes y que hayáis aprendido algo nuevo sobre él.");
+                    hablar("Espero que os haya gustado la historia de Arquímedes y que hayáis aprendido algo nuevo sobre él.");
                     Thread.sleep(8000);
 
 
@@ -341,7 +300,7 @@ public class ArquimedesActivity extends TopBaseActivity {
                     });
                     Thread.sleep(1000);
 
-                    speechControl.hablar("¿Recordáis que palabra gritó Arquímedes al dar con este descubrimiento?");
+                    hablar("¿Recordáis que palabra gritó Arquímedes al dar con este descubrimiento?");
                     Thread.sleep(6000);
 
                 } catch (InterruptedException e) {

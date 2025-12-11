@@ -1,13 +1,23 @@
 package com.example.sanbotapp;
 
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
+import android.speech.tts.TextToSpeech;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,20 +46,13 @@ import com.qihancloud.opensdk.function.unit.SystemManager;
 import com.qihancloud.opensdk.function.unit.WheelMotionManager;
 import com.qihancloud.opensdk.function.unit.interfaces.speech.RecognizeListener;
 
-public class EnigmaSopa extends TopBaseActivity {
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Locale;
 
-    private SpeechControl speechControl;
-    private FaceRecognitionControl faceRecognitionControl;
-    private SpeechManager speechManager;
-    private MediaManager mediaManager;
-    private SystemControl systemControl;
-    private SystemManager systemManager;
-    private HeadControl headControl;
-    private HeadMotionManager headMotionManager;
-    private WheelControl wheelControl;
-    private WheelMotionManager wheelMotionManager;
-    private HardwareControl hardwareControl;
-    private HardWareManager hardWareManager;
+public class EnigmaSopa extends AppCompatActivity implements TextToSpeech.OnInitListener{
+
+
 
     private ImageView enigma3;
     private EditText respuesta;
@@ -70,10 +73,15 @@ public class EnigmaSopa extends TopBaseActivity {
     private Boolean finenigma = false;
 
 
+    private TextToSpeech tts;
+    private SpeechRecognizer speechRecognizer;
+    private static final int PERMISSION_REQUEST_AUDIO = 1;
 
     @Override
-    protected void onMainServiceConnected() {
-
+    public void onInit(int status){
+        if (status == TextToSpeech.SUCCESS) {
+            tts.setLanguage(new Locale("es", "ES"));
+        }
     }
 
 
@@ -82,22 +90,10 @@ public class EnigmaSopa extends TopBaseActivity {
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onCreate(savedInstanceState);
-        onMainServiceConnected();
         setContentView(R.layout.enigmasopa);
 
-        speechManager = (SpeechManager) getUnitManager(FuncConstant.SPEECH_MANAGER);
-        mediaManager = (MediaManager) getUnitManager(FuncConstant.MEDIA_MANAGER);
-        systemManager = (SystemManager) getUnitManager(FuncConstant.SYSTEM_MANAGER);
-        speechControl = new SpeechControl(speechManager);
-        faceRecognitionControl = new FaceRecognitionControl(speechManager, mediaManager);
-        systemControl = new SystemControl(systemManager);
-        headMotionManager = (HeadMotionManager) getUnitManager(FuncConstant.HEADMOTION_MANAGER);
-        headControl = new HeadControl(headMotionManager);
-        wheelMotionManager = (WheelMotionManager) getUnitManager(FuncConstant.WHEELMOTION_MANAGER);
-        wheelControl = new WheelControl(wheelMotionManager);
-        hardWareManager = (HardWareManager) getUnitManager(FuncConstant.HARDWARE_MANAGER);
-        hardwareControl = new HardwareControl(hardWareManager);
 
+        tts = new TextToSpeech(this, this);
         enigma3 = findViewById(R.id.enigma3);
         respuesta = findViewById(R.id.respuesta);
         comprobar = findViewById(R.id.comprobar);
@@ -109,47 +105,36 @@ public class EnigmaSopa extends TopBaseActivity {
 
         enigma3.setVisibility(View.VISIBLE);
 
-        systemManager.switchFloatBar(false, EnigmaSopa.class.getName());
-
-        faceRecognitionControl.stopFaceRecognition();
-
         intent = new Intent(EnigmaSopa.this, ArquimedesActivity.class);
 
-        // Si sanbot detecta la palabra "hola" en el audio, entonces saluda
-        speechManager.setOnSpeechListener(new RecognizeListener() {
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+        speechRecognizer.setRecognitionListener(new RecognitionListener() {// Si sanbot detecta la palabra "hola" en el audio, entonces saluda
             @Override
-            public boolean onRecognizeResult(Grammar grammar) {
+            public void onResults(Bundle results) {
+                ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                if (matches != null && !matches.isEmpty()) {
+                    String text = matches.get(0).toLowerCase(Locale.getDefault());
 
-                System.out.println("Texto reconocido: " + grammar.getText());
+                    System.out.println("Texto reconocido: " + text);
 
-                if ( grammar.getText().contains("Arquímedes") || grammar.getText().contains("arquimedes") || grammar.getText().contains("arquímedes") || grammar.getText().contains("Arquimedes")) {
+                if ( text.contains("Arquímedes") || text.contains("arquimedes") || text.contains("arquímedes") || text.contains("Arquimedes")) {
                     handler.removeCallbacks(runnable);
 
                     if (fin.getVisibility() == View.VISIBLE) {
                         // Expresion feliz
                         finenigma = true;
-                        systemControl.cambiarEmocion(EmotionsType.SMILE);
-                        hardwareControl.encenderLED(LED.PART_ALL, LED.MODE_FLICKER_GREEN);
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
 
                         // ofrecer más respuestas variadas
                         int random = (int) (Math.random() * 3);
                         if(random == 0){
-                            speechControl.hablar("¡Eureka! Sí, el es mi creador. Uno de los hombres más inteligentes de la historia.");
+                            hablar("¡Eureka! Sí, el es mi creador. Uno de los hombres más inteligentes de la historia.");
                         } else if(random == 1){
-                            speechControl.hablar("Exacto, no sé cómo se me pudo olvidar el nombre de uno de los hombres más inteligentes de la historia.");
+                            hablar("Exacto, no sé cómo se me pudo olvidar el nombre de uno de los hombres más inteligentes de la historia.");
                         } else if(random == 2){
-                            speechControl.hablar("Claro, es cierto, el es mi creador, no sé cómo se me pudo olvidar.");
+                            hablar("Claro, es cierto, el es mi creador, no sé cómo se me pudo olvidar.");
                         } else {
-                            speechControl.hablar("¡Eureka! Esa era la respuesta correcta, gracias por descubrir el nombre de mi creador.");
+                            hablar("¡Eureka! Esa era la respuesta correcta, gracias por descubrir el nombre de mi creador.");
                         }
-
-                        // Girar
-                        wheelControl.controlBasicoRuedas(WheelControl.AccionesRuedas.GIRAR);
 
                         try{
                             Thread.sleep(8000);
@@ -157,15 +142,13 @@ public class EnigmaSopa extends TopBaseActivity {
                             e.printStackTrace();
                         }
 
-                        speechControl.hablar("Ahora que sabes quién es mi creador, me gustaría hablarte un poco sobre él. Clica en la flecha para continuar.");
+                        hablar("Ahora que sabes quién es mi creador, me gustaría hablarte un poco sobre él. Clica en la flecha para continuar.");
                         //TODO: MANDAR A LA SIGUIENTE ACTIVIDAD E INTRODUCIR QUE VA A HACER UNA PRESENTACIÓN SOBRE ARQUÍMEDES
 
-                        //Intent intent = new Intent(EnigmaSopa.this, ArquimedesActivity.class);
-                        //startActivity(intent);
+                        Intent intent = new Intent(EnigmaSopa.this, ArquimedesActivity.class);
+                        startActivity(intent);
                     } else{
-                        // Expresion feliz
-                        systemControl.cambiarEmocion(EmotionsType.SMILE);
-                        hardwareControl.encenderLED(LED.PART_ALL, LED.MODE_FLICKER_GREEN);
+
                         try {
                             Thread.sleep(1000);
                         } catch (InterruptedException e) {
@@ -175,13 +158,13 @@ public class EnigmaSopa extends TopBaseActivity {
                         // ofrecer más respuestas variadas
                         int random = (int) (Math.random() * 3);
                         if(random == 0){
-                            speechControl.hablar("¡Eureka! Sí, el es mi creador. Uno de los hombres más inteligentes de la historia.Prueba a introducir la respuesta en la pantalla, y esperemos al resto de familias");
+                            hablar("¡Eureka! Sí, el es mi creador. Uno de los hombres más inteligentes de la historia.Prueba a introducir la respuesta en la pantalla, y esperemos al resto de familias");
                         } else if(random == 1){
-                            speechControl.hablar("Exacto, no sé cómo se me pudo olvidar el nombre de uno de los hombres más inteligentes de la historia.Prueba a introducir la respuesta en la pantalla, y esperemos al resto de familias");
+                            hablar("Exacto, no sé cómo se me pudo olvidar el nombre de uno de los hombres más inteligentes de la historia.Prueba a introducir la respuesta en la pantalla, y esperemos al resto de familias");
                         } else if(random == 2){
-                            speechControl.hablar("Claro, es cierto, el es mi creador, no sé cómo se me pudo olvidar. Prueba a introducir la respuesta en la pantalla, y esperemos al resto de familias");
+                            hablar("Claro, es cierto, el es mi creador, no sé cómo se me pudo olvidar. Prueba a introducir la respuesta en la pantalla, y esperemos al resto de familias");
                         } else {
-                            speechControl.hablar("¡Eureka! Esa era la respuesta correcta, gracias por descubrir el nombre de mi creador. Prueba a introducir la respuesta en la pantalla, y esperemos al resto de familias");
+                            hablar("¡Eureka! Esa era la respuesta correcta, gracias por descubrir el nombre de mi creador. Prueba a introducir la respuesta en la pantalla, y esperemos al resto de familias");
                         }
 
                         try{
@@ -192,78 +175,69 @@ public class EnigmaSopa extends TopBaseActivity {
 
                     }
 
-
-
-                    return true;
-                } else if (grammar.getText().contains("repetir") || grammar.getText().contains("repite")){
+                } else if (text.contains("repetir") || text.contains("repite")){
                     handler.removeCallbacks(runnable);
-                    speechControl.hablar("Claro, el enigma consiste en descrifrar la frase que se muestra en la pantalla. Seguro que con eso conseguimos descubrir el nombre de mi creador");
+                    hablar("Claro, el enigma consiste en descrifrar la frase que se muestra en la pantalla. Seguro que con eso conseguimos descubrir el nombre de mi creador");
                     handler.postDelayed(runnable, 120000);
-                    return true;
 
-                } else if (grammar.getText().contains("pista") || grammar.getText().equals("sí")){
+                } else if (text.contains("pista") || text.equals("sí")){
 
                     // Respuestas aleatorias y variadas del estilo, vaya, parece que no tengo ninguna pista
                     int respuestaAleatoria = (int) (Math.random() * 3) + 1;
                     if (respuestaAleatoria == 1){
-                        speechControl.hablar("Vaya, parece que no tengo ninguna pista que darte.");
+                        hablar("Vaya, parece que no tengo ninguna pista que darte.");
                     } else if (respuestaAleatoria == 2){
-                        speechControl.hablar("Lo siento, no tengo ninguna pista, tendrás que descibrirlo sin mi ayuda.");
+                        hablar("Lo siento, no tengo ninguna pista, tendrás que descibrirlo sin mi ayuda.");
                     } else if (respuestaAleatoria == 3){
-                        speechControl.hablar("Lo siento, no tengo ninguna pista que pueda darte.");
+                        hablar("Lo siento, no tengo ninguna pista que pueda darte.");
                     }
 
-                } else if(grammar.getText().contains("no") || grammar.getText().contains("no quiero") || grammar.getText().contains("no gracias")){
+                } else if(text.contains("no") || text.contains("no quiero") ||text.contains("no gracias")){
 
                     int respuestaAleatoria = (int) (Math.random() * 3) + 1;
                     if (respuestaAleatoria == 1){
-                        speechControl.hablar("Vale, si necesitas que te repita el problema, solo tienes que pedírmelo.");
+                        hablar("Vale, si necesitas que te repita el problema, solo tienes que pedírmelo.");
                     } else if (respuestaAleatoria == 2){
-                        speechControl.hablar("De acuerdo, si necesitas que te repita el enunciado solo tienes que pedirlo.");
+                        hablar("De acuerdo, si necesitas que te repita el enunciado solo tienes que pedirlo.");
                     } else if (respuestaAleatoria == 3){
-                        speechControl.hablar("Está bien, si necesitas ayuda, no dudes en pedírmela.");
+                        hablar("Está bien, si necesitas ayuda, no dudes en pedírmela.");
                     }
-                    return true;
-                } else if(grammar.getText().contains("ayuda") || grammar.getText().contains("ayúdame") || grammar.getText().contains("necesito ayuda")){
+
+                } else if(text.contains("ayuda") || text.contains("ayúdame") || text.contains("necesito ayuda")){
                     int respuestaAleatoria = (int) (Math.random() * 3) + 1;
                     if (respuestaAleatoria == 1){
-                        speechControl.hablar("Claro, recuerda que puedes pedirme que te repita el enunciado si lo necesitas.");
+                        hablar("Claro, recuerda que puedes pedirme que te repita el enunciado si lo necesitas.");
                     } else if (respuestaAleatoria == 2){
-                        speechControl.hablar("Por supuesto, recuerda que puedes pedirme que te repita el enunciado si lo necesitas.");
+                        hablar("Por supuesto, recuerda que puedes pedirme que te repita el enunciado si lo necesitas.");
                     } else if (respuestaAleatoria == 3){
-                        speechControl.hablar("Está bien, si necesitas que te repita el problema, toca mi cabeza y pídemelo.");
+                        hablar("Está bien, si necesitas que te repita el problema, toca mi cabeza y pídemelo.");
                     }
-                    return true;
-                } else if(grammar.getText().contains("gracias") ){
+
+                } else if(text.contains("gracias") ){
                     handler.removeCallbacks(runnable);
                     int respuestaAleatoria = (int) (Math.random() * 3) + 1;
                     if (respuestaAleatoria == 1){
-                        speechControl.hablar("¡De nada! Recuerda que puedes preguntarme lo que sea.");
+                        hablar("¡De nada! Recuerda que puedes preguntarme lo que sea.");
                     } else if (respuestaAleatoria == 2){
-                        speechControl.hablar("¡No hay de qué! Estoy aquí para ayudarte.");
+                        hablar("¡No hay de qué! Estoy aquí para ayudarte.");
                     } else if (respuestaAleatoria == 3){
-                        speechControl.hablar("¡No tienes por qué darme las gracias! Estoy aquí para ayudarte.");
+                        hablar("¡No tienes por qué darme las gracias! Estoy aquí para ayudarte.");
                     }
                     handler.postDelayed(runnable, 120000);
-                    return true;
                 } else{
                     handler.removeCallbacks(runnable);
-                    systemControl.cambiarEmocion(EmotionsType.SWEAT);
-                    hardwareControl.encenderLED(LED.PART_ALL, LED.MODE_FLICKER_RED);
 
                     int respuestaAleatoria = (int) (Math.random() * 3) + 1;
                     if (respuestaAleatoria == 1){
-                        speechControl.hablar("¡Vaya! Esa no es la respuesta correcta. ¡No te preocupes, sigue intentándolo!");
+                        hablar("¡Vaya! Esa no es la respuesta correcta. ¡No te preocupes, sigue intentándolo!");
                     } else if (respuestaAleatoria == 2){
-                        speechControl.hablar("¡Incorrecto! Vuelve a intentarlo, estoy segura de que puedes resolverlo. ¡Buena suerte!");
+                        hablar("¡Incorrecto! Vuelve a intentarlo, estoy segura de que puedes resolverlo. ¡Buena suerte!");
                     } else if (respuestaAleatoria == 3){
-                        speechControl.hablar("¡Incorrecto! ¿Quieres que te repita el enunciado?");
+                        hablar("¡Incorrecto! ¿Quieres que te repita el enunciado?");
                     } else {
-                        speechControl.hablar("¡Vaya! Esa no es la respuesta que esperaba");
+                        hablar("¡Vaya! Esa no es la respuesta que esperaba");
                     }
 
-                    while (speechControl.isRobotHablando()) {
-                    }
                     try{
                         Thread.sleep(1000);
                     } catch (InterruptedException d) {
@@ -271,21 +245,50 @@ public class EnigmaSopa extends TopBaseActivity {
                     }
 
                     handler.postDelayed(runnable, 120000);
-                    return true;
                 }
-                System.out.println(grammar.getText());
-                return true;
+                }
             }
 
-            @Override
-            public void onRecognizeVolume(int i) {
-                System.out.println("onRecognizeVolume ----------------------------------------------");
-            }
+            @Override public void onReadyForSpeech(Bundle params) {}
+            @Override public void onBeginningOfSpeech() {}
+            @Override public void onRmsChanged(float rmsdB) {}
+            @Override public void onBufferReceived(byte[] buffer) {}
+            @Override public void onEndOfSpeech() {}
+            @Override public void onError(int error) { /*startListening(); */}
+            @Override public void onPartialResults(Bundle partialResults) {}
+            @Override public void onEvent(int eventType, Bundle params) {}
 
         });
 
         setonClicks();
 
+    }
+
+    private void startListening() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "es-ES");
+        speechRecognizer.startListening(intent);
+    }
+    private void hablar(String text) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // Para API 21 y superiores
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "utteranceId");
+        } else {
+            // Para API 19–20
+            HashMap<String, String> params = new HashMap<>();
+            params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "utteranceId");
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, params);
+        }
+    }
+
+    private void checkAudioPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.RECORD_AUDIO},
+                    PERMISSION_REQUEST_AUDIO);
+        }
     }
 
     // Una vez iniciada la aplicacion quiero que el robot me salude
@@ -302,7 +305,7 @@ public class EnigmaSopa extends TopBaseActivity {
             @Override
             public void run() {
 
-                speechControl.hablar("Ahora que lo pienso, creo que mi creador me dejó una nota para ayudarme a recordar su nombre");
+                hablar("Ahora que lo pienso, creo que mi creador me dejó una nota para ayudarme a recordar su nombre");
 
 
                 try {
@@ -311,8 +314,7 @@ public class EnigmaSopa extends TopBaseActivity {
                     e.printStackTrace();
                 }
 
-                systemControl.cambiarEmocion(EmotionsType.CRY);
-                speechControl.hablar("¡Vaya! Parece que es una sopa de letras. ¿Pueden ayudarme a encontrar el nombre de mi creador? ");
+                hablar("¡Vaya! Parece que es una sopa de letras. ¿Pueden ayudarme a encontrar el nombre de mi creador? ");
                 // Primero cargar la imagen
 
 
@@ -321,8 +323,7 @@ public class EnigmaSopa extends TopBaseActivity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                systemControl.cambiarEmocion(EmotionsType.SMILE);
-                speechControl.hablar("Al igual que antes, mi ayudante os repartirá una hoja con el enigma");
+                hablar("Al igual que antes, mi ayudante os repartirá una hoja con el enigma");
 
                 try {
                     Thread.sleep(6000);
@@ -330,7 +331,7 @@ public class EnigmaSopa extends TopBaseActivity {
                     e.printStackTrace();
                 }
 
-                speechControl.hablar("Recordar venir a mi para decirme la respuesta.");
+                hablar("Recordar venir a mi para decirme la respuesta.");
 
                 try {
                     Thread.sleep(4000);
@@ -338,7 +339,7 @@ public class EnigmaSopa extends TopBaseActivity {
                     e.printStackTrace();
                 }
 
-                speechControl.hablar("Ya podéis ir a vuestras mesas ¡Buena suerte!");
+                hablar("Ya podéis ir a vuestras mesas ¡Buena suerte!");
 
                 try {
                     Thread.sleep(4000);
@@ -410,7 +411,7 @@ public class EnigmaSopa extends TopBaseActivity {
             @Override
             public void onClick(View v) {
                 handler.removeCallbacks(runnable);
-                speechControl.hablar("Recuerda que debes buscar el nombre de mi creador en la sopa de letras ¡Buena suerte!");
+                hablar("Recuerda que debes buscar el nombre de mi creador en la sopa de letras ¡Buena suerte!");
                 handler.postDelayed(runnable, 120000);
             }
         });
@@ -456,22 +457,19 @@ public class EnigmaSopa extends TopBaseActivity {
 
 
                     handler.removeCallbacks(runnable);
-                    // Expresion feliz
-                    systemControl.cambiarEmocion(EmotionsType.SMILE);
-                    hardwareControl.encenderLED(LED.PART_ALL, LED.MODE_FLICKER_GREEN);
 
                     // Borrar el texto de la respuesta
                     respuesta.setText("");
 
                     int random = (int) (Math.random() * 3);
                     if(random == 0){
-                        speechControl.hablar("¡Eureka! Has encontrado el nombre de mi creador, vamos a esperar al resto de familias. ¡Enhorabuena!");
+                        hablar("¡Eureka! Has encontrado el nombre de mi creador, vamos a esperar al resto de familias. ¡Enhorabuena!");
                     } else if(random == 1){
-                        speechControl.hablar("Exacto, sois geniales, descifrar ese nombre no era tarea fácil. Esperemos al resto de familias seguro que también lo consiguen. ¡Enhorabuena!");
+                        hablar("Exacto, sois geniales, descifrar ese nombre no era tarea fácil. Esperemos al resto de familias seguro que también lo consiguen. ¡Enhorabuena!");
                     } else if(random == 2){
-                        speechControl.hablar("Esa es la respuesta, gracias por encontrar el nombre de mi creador. Ahora esperemos a que el resto de familias también lo consigan. ¡Enhorabuena!");
+                        hablar("Esa es la respuesta, gracias por encontrar el nombre de mi creador. Ahora esperemos a que el resto de familias también lo consigan. ¡Enhorabuena!");
                     } else {
-                        speechControl.hablar("¡Fantástico! Habéis conseguido encontrar el nombre de mi creador. Vamos a esperar a que el resto de familias también lo consigan. ¡Enhorabuena!");
+                        hablar("¡Fantástico! Habéis conseguido encontrar el nombre de mi creador. Vamos a esperar a que el resto de familias también lo consigan. ¡Enhorabuena!");
                     }
 
                     try {
@@ -484,19 +482,16 @@ public class EnigmaSopa extends TopBaseActivity {
 
                 } else {
 
-
-                    systemControl.cambiarEmocion(EmotionsType.SWEAT);
-                    hardwareControl.encenderLED(LED.PART_ALL, LED.MODE_FLICKER_RED);
                     // ofrecer distintas frases de error
                     int random = (int) (Math.random() * 3);
                     if(random == 0){
-                        speechControl.hablar("¡Vaya! " + respuesta.getText().toString() + " no es el nombre de mi creador, sigue intentándolo.");
+                        hablar("¡Vaya! " + respuesta.getText().toString() + " no es el nombre de mi creador, sigue intentándolo.");
                     } else if(random == 1){
-                        speechControl.hablar("¡Oh no! Esa no es la respuesta correcta, no conozco a ninún" + respuesta.getText().toString() + ". Sigue intentándolo.");
+                        hablar("¡Oh no! Esa no es la respuesta correcta, no conozco a ninún" + respuesta.getText().toString() + ". Sigue intentándolo.");
                     } else if(random == 2){
-                        speechControl.hablar("¡Vaya! Parece que " + respuesta.getText().toString() + " no es el nombre de mi creador. Sigue intentándolo, estoy segura de que lo encontrarás.");
+                        hablar("¡Vaya! Parece que " + respuesta.getText().toString() + " no es el nombre de mi creador. Sigue intentándolo, estoy segura de que lo encontrarás.");
                     } else {
-                        speechControl.hablar("¡Incorrecto! Sigue intentándolo, estoy segura de que encontrarás el nombre de mi creador. ¡Ánimo!");
+                        hablar("¡Incorrecto! Sigue intentándolo, estoy segura de que encontrarás el nombre de mi creador. ¡Ánimo!");
                     }
 
 
@@ -524,7 +519,7 @@ public class EnigmaSopa extends TopBaseActivity {
                 } else {
 
                     // Leer el texto
-                    speechControl.hablar("Para continuar con la exposición teneis que decirme el nombre de mi creador.");
+                    hablar("Para continuar con la exposición teneis que decirme el nombre de mi creador.");
 
 
                     // Crear el AlertDialog
@@ -545,12 +540,7 @@ public class EnigmaSopa extends TopBaseActivity {
                     messageView.setText("Para continuar con la exposición teneis que decirme el nombre de mi creador"); // Texto del mensaje
 
                     // Configurar tamaño del diálogo según el diseño inflado
-                    dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                        @Override
-                        public void onShow(DialogInterface dialogInterface) {
-                            dialog.getWindow().setLayout(1400, 800); // Ajustar a las dimensiones exactas de la imagen de fondo
-                        }
-                    });
+
 
                     dialog.show();
 

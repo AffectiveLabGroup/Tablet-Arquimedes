@@ -269,12 +269,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                     messageView.setText("¡Enhorabuena! La respuesta es correcta"); // Texto del mensaje
 
                     // Configurar tamaño del diálogo según el diseño inflado
-                    dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                        @Override
-                        public void onShow(DialogInterface dialogInterface) {
-                            dialog.getWindow().setLayout(1400, 800); // Ajustar a las dimensiones exactas de la imagen de fondo
-                        }
-                    });
+
 
                     dialog.show();
 
@@ -327,12 +322,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                     messageView.setText("¡Vaya! Parece que la respuesta es incorrecta"); // Texto del mensaje
 
                     // Configurar tamaño del diálogo según el diseño inflado
-                    dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                        @Override
-                        public void onShow(DialogInterface dialogInterface) {
-                            dialog.getWindow().setLayout(1400, 800); // Ajustar a las dimensiones exactas de la imagen de fondo
-                        }
-                    });
+
 
                     dialog.show();
 

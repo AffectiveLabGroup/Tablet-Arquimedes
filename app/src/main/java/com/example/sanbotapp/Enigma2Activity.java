@@ -753,12 +753,8 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
                 });
 
                 // Configurar tamaño del diálogo según el diseño inflado
-                dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                    @Override
-                    public void onShow(DialogInterface dialogInterface) {
-                        dialog.getWindow().setLayout(1400, 800); // Ajustar a las dimensiones exactas de la imagen de fondo
-                    }
-                });
+
+
 
                 dialog.show();
 
@@ -803,13 +799,6 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
                         }
                     });
 
-                    // Configurar tamaño del diálogo según el diseño inflado
-                    dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                        @Override
-                        public void onShow(DialogInterface dialogInterface) {
-                            dialog.getWindow().setLayout(1400, 800); // Ajustar a las dimensiones exactas de la imagen de fondo
-                        }
-                    });
 
                     dialog.show();
                 }
