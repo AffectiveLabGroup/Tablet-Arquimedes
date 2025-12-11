@@ -9,7 +9,8 @@
         android:id="@+id/fondo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/fondo"
+        android:scaleType="centerCrop"
+        android:src="@drawable/fondo1"
         android:visibility="gone"
 
         />

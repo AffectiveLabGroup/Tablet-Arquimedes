@@ -9,9 +9,11 @@
         android:id="@+id/enigma2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/fondo"
-        android:visibility="visible"
-        />
+
+        android:scaleType="centerCrop"
+
+        android:src="@drawable/fondo1"
+        android:visibility="visible" />
 
     <Button
         android:id="@+id/saltar"
@@ -35,6 +37,21 @@
         android:layout_gravity="top|end"
         android:orientation="horizontal"
         >
+
+        <Button
+            android:id="@+id/btnhablar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hablar"
+            android:textColor="@color/colorWhite"
+            android:visibility="visible"
+            android:textAllCaps="false"
+            android:textSize="35sp"
+            android:background="@drawable/button_rounded"
+            android:fontFamily="@font/julee_regular"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="40dp" />
 
         <Button
             android:id="@+id/repetir"

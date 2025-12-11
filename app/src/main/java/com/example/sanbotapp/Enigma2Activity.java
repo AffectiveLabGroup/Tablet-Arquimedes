@@ -32,27 +32,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.sanbotapp.gestion.GestionMediaPlayer;
-import com.example.sanbotapp.moduloOpenAI.ModuloOpenAIAudioSpeech;
-import com.example.sanbotapp.robotControl.FaceRecognitionControl;
-import com.example.sanbotapp.robotControl.HardwareControl;
-import com.example.sanbotapp.robotControl.HeadControl;
-import com.example.sanbotapp.robotControl.SpeechControl;
-import com.example.sanbotapp.robotControl.SystemControl;
-import com.example.sanbotapp.robotControl.WheelControl;
-import com.qihancloud.opensdk.base.TopBaseActivity;
-import com.qihancloud.opensdk.beans.FuncConstant;
-import com.qihancloud.opensdk.function.beans.EmotionsType;
-import com.qihancloud.opensdk.function.beans.LED;
-import com.qihancloud.opensdk.function.beans.headmotion.AbsoluteAngleHeadMotion;
-import com.qihancloud.opensdk.function.beans.speech.Grammar;
-import com.qihancloud.opensdk.function.unit.HardWareManager;
-import com.qihancloud.opensdk.function.unit.HeadMotionManager;
-import com.qihancloud.opensdk.function.unit.MediaManager;
-import com.qihancloud.opensdk.function.unit.SpeechManager;
-import com.qihancloud.opensdk.function.unit.SystemManager;
-import com.qihancloud.opensdk.function.unit.WheelMotionManager;
-import com.qihancloud.opensdk.function.unit.interfaces.speech.RecognizeListener;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -80,6 +59,7 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
     private Button repetir;
 
     private Boolean finenigma = false;
+    private Button btnhablar;
 
 
     // Por defecto es esta
@@ -131,6 +111,8 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
         exit = findViewById(R.id.exit);
         repetir = findViewById(R.id.repetir);
         saltar = findViewById(R.id.saltar);
+        btnhablar = findViewById(R.id.btnhablar);
+
 
         intent = new Intent(Enigma2Activity.this, Enigma3Activity.class);
 
@@ -221,7 +203,11 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-                            hablar("Clica en la flecha para pasar al siguiente enigma");
+                            //hablar("Clica en la flecha para pasar al siguiente enigma");
+                            //TODO: SE PASA AL SIGUIENTE ENIGMA
+                            intent = new Intent(Enigma2Activity.this, Enigma3Activity.class);
+                            startActivity(intent);
+
 
                         } else {
 
@@ -512,6 +498,13 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
                     .show();
         });
 
+        btnhablar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startListening();
+            }
+        });
+
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -781,7 +774,7 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
                     startActivity(intent);
                 } else {
                     // Decir texto
-                    hablar("Para pasar al siguiente enigma teneis que decirme el resultado de la multiplicación de las filas y columnas");
+                    hablar("Para pasar al siguiente enigma tenéis que decirme el resultado de la multiplicación de las filas y columnas");
                     // Crear el AlertDialog
                     AlertDialog.Builder builder = new AlertDialog.Builder(Enigma2Activity.this);
 
@@ -791,6 +784,8 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
 
                     // Configurar el TextView del diseño inflado
                     TextView messageView = dialogView.findViewById(R.id.tvPistas);
+                    Button btnAceptar = dialogView.findViewById(R.id.btnhablar);
+
                     AlertDialog dialog = builder.create();
 
 
@@ -798,6 +793,15 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
                     Typeface customFont = ResourcesCompat.getFont(Enigma2Activity.this, R.font.julee_regular);
                     messageView.setTypeface(customFont);
                     messageView.setText("Para pasar al siguiente enigma teneis que decirme el resultado de la multiplicación de las filas y columnas"); // Texto del mensaje
+
+                    btnAceptar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // Acción del botón
+                            //TODO: ESCUCHA
+                            startListening();
+                        }
+                    });
 
                     // Configurar tamaño del diálogo según el diseño inflado
                     dialog.setOnShowListener(new DialogInterface.OnShowListener() {

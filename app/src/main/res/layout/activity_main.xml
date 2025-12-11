@@ -9,7 +9,8 @@
         android:id="@+id/imageViewFondo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/fondo"
+        android:src="@drawable/fondo1"
+        android:scaleType="centerCrop"
         android:visibility="visible" />
 
     <Button
