@@ -66,6 +66,7 @@ public class ArquimedesActivity extends AppCompatActivity implements TextToSpeec
     private ImageView arq3;
 
     private Button exit;
+    private Button hablar;
 
     private TextToSpeech tts;
     private SpeechRecognizer speechRecognizer;
@@ -89,6 +90,7 @@ public class ArquimedesActivity extends AppCompatActivity implements TextToSpeec
         tts = new TextToSpeech(this, this);
 
         exit = findViewById(R.id.exit);
+        hablar = findViewById(R.id.hablar);
 
         arq1 = findViewById(R.id.arq1);
         arq2 = findViewById(R.id.arq2);
@@ -123,6 +125,13 @@ public class ArquimedesActivity extends AppCompatActivity implements TextToSpeec
                 // Mostrar el diálogo
                 AlertDialog dialog = builder.create();
                 dialog.show();
+            }
+        });
+
+        hablar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startListening();
             }
         });
 
@@ -258,7 +267,7 @@ public class ArquimedesActivity extends AppCompatActivity implements TextToSpeec
                 try {
                     // Primer diálogo
                     hablar("Estoy muy contenta de que hayáis conseguido llegar hasta aquí.");
-                    Thread.sleep(5500);
+                    Thread.sleep(7000);
 
                     hablar("Arquímedes fue mi creador, un gran matemático, físico, ingeniero, inventor y astrónomo griego.");
                     Thread.sleep(9000);
@@ -284,11 +293,11 @@ public class ArquimedesActivity extends AppCompatActivity implements TextToSpeec
                     Thread.sleep(11000);
 
                     hablar("Entusiasmado por su descubrimiento, salió corriendo gritando '¡Eureka! ¡Eureka!'. Que en griego significa ¡Lo he encontrado! ");
-                    Thread.sleep(9000);
+                    Thread.sleep(10000);
 
                     // Última parte del diálogo
                     hablar("Arquímedes pensó que si introducía la corona en la bañera, podía descubrir de qué estaba hecha midiendo el volumen de agua que desbordaba, que sería diferente según el material del que estuviera hecha.\n");
-                    Thread.sleep(16000);
+                    Thread.sleep(15000);
 
                     hablar("Espero que os haya gustado la historia de Arquímedes y que hayáis aprendido algo nuevo sobre él.");
                     Thread.sleep(8000);
@@ -302,6 +311,10 @@ public class ArquimedesActivity extends AppCompatActivity implements TextToSpeec
 
                     hablar("¿Recordáis que palabra gritó Arquímedes al dar con este descubrimiento?");
                     Thread.sleep(6000);
+
+                    runOnUiThread(() -> hablar.setVisibility(View.VISIBLE));
+
+
 
                 } catch (InterruptedException e) {
                     e.printStackTrace();

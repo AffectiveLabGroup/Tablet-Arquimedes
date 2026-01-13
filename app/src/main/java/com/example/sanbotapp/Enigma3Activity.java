@@ -172,7 +172,7 @@ public class Enigma3Activity extends AppCompatActivity implements TextToSpeech.O
                             hablar("¡Eureka! Esa era la respuesta correcta, gracias por descubrir el nombre de mi creador.");
                         }
 
-                        hablar("Ahora que sabes quién es mi creador, me gustaría hablarte un poco sobre él. Clica en la flecha para continuar. ");
+                        hablar("Ahora que sabes quién es mi creador, me gustaría hablarte un poco sobre él. ");
                         //TODO: MANDAR A LA SIGUIENTE ACTIVIDAD E INTRODUCIR QUE VA A HACER UNA PRESENTACIÓN SOBRE ARQUÍMEDES
 
 

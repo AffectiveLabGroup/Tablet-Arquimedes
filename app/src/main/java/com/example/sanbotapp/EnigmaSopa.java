@@ -142,7 +142,7 @@ public class EnigmaSopa extends AppCompatActivity implements TextToSpeech.OnInit
                             e.printStackTrace();
                         }
 
-                        hablar("Ahora que sabes quién es mi creador, me gustaría hablarte un poco sobre él. Clica en la flecha para continuar.");
+                        hablar("Ahora que sabes quién es mi creador, me gustaría hablarte un poco sobre él. ");
                         //TODO: MANDAR A LA SIGUIENTE ACTIVIDAD E INTRODUCIR QUE VA A HACER UNA PRESENTACIÓN SOBRE ARQUÍMEDES
 
                         Intent intent = new Intent(EnigmaSopa.this, ArquimedesActivity.class);
@@ -531,6 +531,7 @@ public class EnigmaSopa extends AppCompatActivity implements TextToSpeech.OnInit
 
                     // Configurar el TextView del diseño inflado
                     TextView messageView = dialogView.findViewById(R.id.tvPistas);
+                    Button btnAceptar = dialogView.findViewById(R.id.btnhablar);
                     AlertDialog dialog = builder.create();
 
 
@@ -539,6 +540,14 @@ public class EnigmaSopa extends AppCompatActivity implements TextToSpeech.OnInit
                     messageView.setTypeface(customFont);
                     messageView.setText("Para continuar con la exposición teneis que decirme el nombre de mi creador"); // Texto del mensaje
 
+                    btnAceptar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // Acción del botón
+                            //TODO: ESCUCHA
+                            startListening();
+                        }
+                    });
                     // Configurar tamaño del diálogo según el diseño inflado
 
 

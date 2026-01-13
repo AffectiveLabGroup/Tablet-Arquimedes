@@ -226,7 +226,7 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
                     } else if (text.contains("repetir") || text.contains("repite")) {
                         handler.removeCallbacks(runnable);
                         hablar("Claro, el enigma consiste colocar un número en cada casilla, de tal forma que el resultado de la multiplicación de los números de cada fila y columna sea el mismo");
-                        handler.postDelayed(runnable, 120000);
+                        handler.postDelayed(runnable, 130000);
 
                     } else if (text.contains("pista") || text.contains("sí")) {
                         handler.removeCallbacks(runnable);
@@ -788,7 +788,7 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
                     // Cargar la tipografía personalizada
                     Typeface customFont = ResourcesCompat.getFont(Enigma2Activity.this, R.font.julee_regular);
                     messageView.setTypeface(customFont);
-                    messageView.setText("Para pasar al siguiente enigma teneis que decirme el resultado de la multiplicación de las filas y columnas"); // Texto del mensaje
+                    messageView.setText("Para pasar al siguiente enigma tenéis que decirme el resultado de la multiplicación de las filas y columnas"); // Texto del mensaje
 
                     btnAceptar.setOnClickListener(new View.OnClickListener() {
                         @Override

@@ -141,7 +141,7 @@ public class EnigmaNombre extends AppCompatActivity implements TextToSpeech.OnIn
                             e.printStackTrace();
                         }
 
-                        hablar("Ahora que sabes quién es mi creador, me gustaría hablarte un poco sobre él. Clica en la flecha para continuar. ");
+                        hablar("Ahora que sabes quién es mi creador, me gustaría hablarte un poco sobre él. ");
                         //TODO: MANDAR A LA SIGUIENTE ACTIVIDAD E INTRODUCIR QUE VA A HACER UNA PRESENTACIÓN SOBRE ARQUÍMEDES
 
                         Intent intent = new Intent(EnigmaNombre.this, ArquimedesActivity.class);
@@ -519,6 +519,7 @@ public class EnigmaNombre extends AppCompatActivity implements TextToSpeech.OnIn
 
                     // Configurar el TextView del diseño inflado
                     TextView messageView = dialogView.findViewById(R.id.tvPistas);
+                    Button btnAceptar = dialogView.findViewById(R.id.btnhablar);
                     AlertDialog dialog = builder.create();
 
 
@@ -528,6 +529,14 @@ public class EnigmaNombre extends AppCompatActivity implements TextToSpeech.OnIn
                     messageView.setText("Para continuar con la exposición teneis que decirme el nombre de mi creador"); // Texto del mensaje
 
                     // Configurar tamaño del diálogo según el diseño inflado
+                    btnAceptar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // Acción del botón
+                            //TODO: ESCUCHA
+                            startListening();
+                        }
+                    });
 
 
                     dialog.show();

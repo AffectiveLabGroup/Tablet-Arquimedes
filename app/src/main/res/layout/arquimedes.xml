@@ -32,6 +32,19 @@
         android:visibility="gone"
         />
 
+    <Button
+        android:id="@+id/hablar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hablar"
+        android:textColor="@color/colorWhite"
+        android:visibility="gone"
+        android:textAllCaps="false"
+        android:textSize="35sp"
+        android:background="@drawable/button_rounded"
+        android:fontFamily="@font/julee_regular"
+        android:layout_gravity="center|center"
+        android:layout_marginTop="200dp" />
 
 
     <Button
