@@ -183,13 +183,13 @@ public class Enigma3Activity extends AppCompatActivity implements TextToSpeech.O
                         // ofrecer más respuestas variadas
                         int random = (int) (Math.random() * 3);
                         if(random == 0){
-                            hablar("¡Eureka! Sí, el es mi creador. Uno de los hombres más inteligentes de la historia.Prueba a introducir la respuesta en la pantalla, y esperemos al resto de familias");
+                            hablar("¡Eureka! Sí, el es mi creador. Uno de los hombres más inteligentes de la historia.Prueba a introducir la respuesta en la pantalla, y esperemos al resto de participantes");
                         } else if(random == 1){
-                            hablar("Exacto, no sé cómo se me pudo olvidar el nombre de uno de los hombres más inteligentes de la historia.Prueba a introducir la respuesta en la pantalla, y esperemos al resto de familias");
+                            hablar("Exacto, no sé cómo se me pudo olvidar el nombre de uno de los hombres más inteligentes de la historia.Prueba a introducir la respuesta en la pantalla, y esperemos al resto de participantes");
                         } else if(random == 2){
-                            hablar("Claro, es cierto, el es mi creador, no sé cómo se me pudo olvidar. Prueba a introducir la respuesta en la pantalla, y esperemos al resto de familias");
+                            hablar("Claro, es cierto, el es mi creador, no sé cómo se me pudo olvidar. Prueba a introducir la respuesta en la pantalla, y esperemos al resto de participantes");
                         } else {
-                            hablar("¡Eureka! Esa era la respuesta correcta, gracias por descubrir el nombre de mi creador. Prueba a introducir la respuesta en la pantalla, y esperemos al resto de familias");
+                            hablar("¡Eureka! Esa era la respuesta correcta, gracias por descubrir el nombre de mi creador. Prueba a introducir la respuesta en la pantalla, y esperemos al resto de participantes");
                         }
 
                         try{
@@ -506,13 +506,13 @@ public class Enigma3Activity extends AppCompatActivity implements TextToSpeech.O
 
                     int random = (int) (Math.random() * 3);
                     if(random == 0){
-                        hablar("¡Eureka! Has conseguido descifrar la frase, vamos a esperar al resto de familias para comprobar si han conseguido descifrarla también. ¡Enhorabuena!");
+                        hablar("¡Eureka! Has conseguido descifrar la frase, vamos a esperar al resto de participantes para comprobar si han conseguido descifrarla también. ¡Enhorabuena!");
                     } else if(random == 1){
-                        hablar("Exacto, sois geniales, descifrar esa frase no era tarea fácil. Esperemos al resto de familias seguro que también lo consiguen. ¡Enhorabuena!");
+                        hablar("Exacto, sois geniales, descifrar esa frase no era tarea fácil. Esperemos al resto de participantes seguro que también lo consiguen. ¡Enhorabuena!");
                     } else if(random == 2){
-                        hablar("Esa es la respuesta, gracias por descifrar la frase. Ahora esperemos a que el resto de familias también lo consigan. ¡Enhorabuena!");
+                        hablar("Esa es la respuesta, gracias por descifrar la frase. Ahora esperemos a que el resto de participantes también lo consigan. ¡Enhorabuena!");
                     } else {
-                        hablar("¡Fantástico! Habéis conseguido descifrar la frase. Vamos a esperar a que el resto de familias también lo consigan. ¡Enhorabuena!");
+                        hablar("¡Fantástico! Habéis conseguido descifrar la frase. Vamos a esperar a que el resto de participantes también lo consigan. ¡Enhorabuena!");
                     }
 
                     try {

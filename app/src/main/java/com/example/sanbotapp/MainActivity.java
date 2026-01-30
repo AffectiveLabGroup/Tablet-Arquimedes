@@ -449,27 +449,36 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     }
 
 
+
     private void hablar(String text) {
+        if (text == null || text.trim().isEmpty()) return;
+
+        // 🔧 Normalización para evitar entonación interrogativa
+        String texto = text.trim();
+
+        // Si no termina en puntuación fuerte, le agregamos punto
+        if (!texto.matches(".*[.!?]$")) {
+            texto += ".";
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            // Para API 21 y superiores
-            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "utteranceId");
+            tts.speak(texto, TextToSpeech.QUEUE_FLUSH, null, "utteranceId");
         } else {
-            // Para API 19–20
             HashMap<String, String> params = new HashMap<>();
             params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "utteranceId");
-            tts.speak(text, TextToSpeech.QUEUE_FLUSH, params);
+            tts.speak(texto, TextToSpeech.QUEUE_FLUSH, params);
         }
     }
     public void despertar() {
         //Abrir ojos
 
-        hablar("Vaya, parece que me he quedado dormida...");
+        hablar("Vaya, parece que me he quedado dormida.");
 
-        hablar("No sé donde estoy...");
+        hablar("No sé donde estoy.");
 
-        hablar("Todo esto es muy raro..., no recuerdo nada... ");
+        hablar("Todo esto es muy raro, no recuerdo nada. ");
 
-        hablar("Me siento muy confusa...");
+        hablar("Me siento muy confusa.");
 
         hablar("Perdón si os he asustado, me llamo Lola.");
 

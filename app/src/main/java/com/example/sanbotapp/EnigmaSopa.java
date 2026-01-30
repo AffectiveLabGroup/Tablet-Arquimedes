@@ -158,13 +158,13 @@ public class EnigmaSopa extends AppCompatActivity implements TextToSpeech.OnInit
                         // ofrecer más respuestas variadas
                         int random = (int) (Math.random() * 3);
                         if(random == 0){
-                            hablar("¡Eureka! Sí, el es mi creador. Uno de los hombres más inteligentes de la historia.Prueba a introducir la respuesta en la pantalla, y esperemos al resto de familias");
+                            hablar("¡Eureka! Sí, el es mi creador. Uno de los hombres más inteligentes de la historia.Prueba a introducir la respuesta en la pantalla, y esperemos al resto de participantes");
                         } else if(random == 1){
-                            hablar("Exacto, no sé cómo se me pudo olvidar el nombre de uno de los hombres más inteligentes de la historia.Prueba a introducir la respuesta en la pantalla, y esperemos al resto de familias");
+                            hablar("Exacto, no sé cómo se me pudo olvidar el nombre de uno de los hombres más inteligentes de la historia.Prueba a introducir la respuesta en la pantalla, y esperemos al resto de participantes");
                         } else if(random == 2){
-                            hablar("Claro, es cierto, el es mi creador, no sé cómo se me pudo olvidar. Prueba a introducir la respuesta en la pantalla, y esperemos al resto de familias");
+                            hablar("Claro, es cierto, el es mi creador, no sé cómo se me pudo olvidar. Prueba a introducir la respuesta en la pantalla, y esperemos al resto de participantes");
                         } else {
-                            hablar("¡Eureka! Esa era la respuesta correcta, gracias por descubrir el nombre de mi creador. Prueba a introducir la respuesta en la pantalla, y esperemos al resto de familias");
+                            hablar("¡Eureka! Esa era la respuesta correcta, gracias por descubrir el nombre de mi creador. Prueba a introducir la respuesta en la pantalla, y esperemos al resto de participantes");
                         }
 
                         try{
@@ -463,13 +463,13 @@ public class EnigmaSopa extends AppCompatActivity implements TextToSpeech.OnInit
 
                     int random = (int) (Math.random() * 3);
                     if(random == 0){
-                        hablar("¡Eureka! Has encontrado el nombre de mi creador, vamos a esperar al resto de familias. ¡Enhorabuena!");
+                        hablar("¡Eureka! Has encontrado el nombre de mi creador, vamos a esperar al resto de participantes. ¡Enhorabuena!");
                     } else if(random == 1){
-                        hablar("Exacto, sois geniales, descifrar ese nombre no era tarea fácil. Esperemos al resto de familias seguro que también lo consiguen. ¡Enhorabuena!");
+                        hablar("Exacto, sois geniales, descifrar ese nombre no era tarea fácil. Esperemos al resto de participantes seguro que también lo consiguen. ¡Enhorabuena!");
                     } else if(random == 2){
-                        hablar("Esa es la respuesta, gracias por encontrar el nombre de mi creador. Ahora esperemos a que el resto de familias también lo consigan. ¡Enhorabuena!");
+                        hablar("Esa es la respuesta, gracias por encontrar el nombre de mi creador. Ahora esperemos a que el resto de participantes también lo consigan. ¡Enhorabuena!");
                     } else {
-                        hablar("¡Fantástico! Habéis conseguido encontrar el nombre de mi creador. Vamos a esperar a que el resto de familias también lo consigan. ¡Enhorabuena!");
+                        hablar("¡Fantástico! Habéis conseguido encontrar el nombre de mi creador. Vamos a esperar a que el resto de participantes también lo consigan. ¡Enhorabuena!");
                     }
 
                     try {
@@ -518,40 +518,11 @@ public class EnigmaSopa extends AppCompatActivity implements TextToSpeech.OnInit
                     startActivity(intent);
                 } else {
 
-                    // Leer el texto
-                    hablar("Para continuar con la exposición teneis que decirme el nombre de mi creador.");
+                    hablar("Ahora que sabes quién es mi creador, me gustaría hablarte un poco sobre él. ");
+                    //TODO: MANDAR A LA SIGUIENTE ACTIVIDAD E INTRODUCIR QUE VA A HACER UNA PRESENTACIÓN SOBRE ARQUÍMEDES
 
-
-                    // Crear el AlertDialog
-                    AlertDialog.Builder builder = new AlertDialog.Builder(EnigmaSopa.this);
-
-                    // Inflar el diseño personalizado del diálogo
-                    View dialogView = getLayoutInflater().inflate(R.layout.decir72, null);
-                    builder.setView(dialogView);
-
-                    // Configurar el TextView del diseño inflado
-                    TextView messageView = dialogView.findViewById(R.id.tvPistas);
-                    Button btnAceptar = dialogView.findViewById(R.id.btnhablar);
-                    AlertDialog dialog = builder.create();
-
-
-                    // Cargar la tipografía personalizada
-                    Typeface customFont = ResourcesCompat.getFont(EnigmaSopa.this, R.font.julee_regular);
-                    messageView.setTypeface(customFont);
-                    messageView.setText("Para continuar con la exposición teneis que decirme el nombre de mi creador"); // Texto del mensaje
-
-                    btnAceptar.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            // Acción del botón
-                            //TODO: ESCUCHA
-                            startListening();
-                        }
-                    });
-                    // Configurar tamaño del diálogo según el diseño inflado
-
-
-                    dialog.show();
+                    Intent intent = new Intent(EnigmaSopa.this, ArquimedesActivity.class);
+                    startActivity(intent);
 
                 }
 

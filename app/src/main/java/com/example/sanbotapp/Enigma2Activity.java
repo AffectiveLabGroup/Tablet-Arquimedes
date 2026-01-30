@@ -114,7 +114,7 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
         btnhablar = findViewById(R.id.btnhablar);
 
 
-        intent = new Intent(Enigma2Activity.this, Enigma3Activity.class);
+        intent = new Intent(Enigma2Activity.this, EnigmaSopa.class);
 
         enigma2 = findViewById(R.id.enigma2);
         checkAudioPermission();
@@ -205,7 +205,7 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
                             }
                             //hablar("Clica en la flecha para pasar al siguiente enigma");
                             //TODO: SE PASA AL SIGUIENTE ENIGMA
-                            intent = new Intent(Enigma2Activity.this, Enigma3Activity.class);
+                            intent = new Intent(Enigma2Activity.this, EnigmaSopa.class);
                             startActivity(intent);
 
 
@@ -214,11 +214,11 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
                             // Ofreceme respuestas distintas para cada caso
                             int random = (int) (Math.random() * 3);
                             if (random == 0) {
-                                hablar("¡Genial! Esa es la respuesta. Gracias por resolver este enigma ¡Sois geniales! Prueba a introducir la respuesta por pantalla y esperemos al resto de familias");
+                                hablar("¡Genial! Esa es la respuesta. Gracias por resolver este enigma ¡Sois geniales! Prueba a introducir la respuesta por pantalla y esperemos al resto de participantes");
                             } else if (random == 1) {
-                                hablar("¡Correcto! Esa es la respuesta. ¡Sois unos cracks! Prueba a introducir la respuesta por pantalla y esperemos al resto de familias");
+                                hablar("¡Correcto! Esa es la respuesta. ¡Sois unos cracks! Prueba a introducir la respuesta por pantalla y esperemos al resto de participantes");
                             } else {
-                                hablar("¡Eso es! ¡Sois unos genios! Sigamos con el siguiente enigma. Prueba a introducir la respuesta por pantalla y esperemos al resto de familias");
+                                hablar("¡Eso es! ¡Sois unos genios! Sigamos con el siguiente enigma. Prueba a introducir la respuesta por pantalla y esperemos al resto de participantes");
                             }
 
                         }
@@ -489,7 +489,7 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
                         } else if(which == 2){
                             intent = new Intent(Enigma2Activity.this, EnigmaSopa.class);
                         } else{
-                            intent = new Intent(Enigma2Activity.this, Enigma3Activity.class);
+                            intent = new Intent(Enigma2Activity.this, EnigmaSopa.class);
                         }
                     })
                     .setNegativeButton("SALTAR", (dialog, which) -> {
@@ -630,13 +630,13 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
 
                     int respuestaAleatoria = (int) (Math.random() * 3) + 1;
                     if (respuestaAleatoria == 1){
-                        hablar("¡Muy bien! ¡Has resuelto el enigma! Vamos a esperar al resto de familias para que lo resuelvan también.");
+                        hablar("¡Muy bien! ¡Has resuelto el enigma! Vamos a esperar al resto de participantes para que lo resuelvan también.");
                     } else if (respuestaAleatoria == 2){
-                        hablar("¡Perfecto! Esos son los números correctos. Antes de decirme la solución de la multiplicación, vamos a esperar a que el resto de familias resuelvan el enigma.");
+                        hablar("¡Perfecto! Esos son los números correctos. Antes de decirme la solución de la multiplicación, vamos a esperar a que el resto de participantes resuelvan el enigma.");
                     } else if (respuestaAleatoria == 3){
-                        hablar("¡Genial! Antes de pasar al siguiente enigma vamos a esperar a que el resto de familias resuelvan este.");
+                        hablar("¡Genial! Antes de pasar al siguiente enigma vamos a esperar a que el resto de participantes resuelvan este.");
                     } else {
-                        hablar("¡Muy bien! ¡Has resuelto el enigma! Vamos a esperar al resto de familias para que lo resuelvan también.");
+                        hablar("¡Muy bien! ¡Has resuelto el enigma! Vamos a esperar al resto de participantes para que lo resuelvan también.");
                     }
 
                     flechaSiguiente.setVisibility(View.VISIBLE);
