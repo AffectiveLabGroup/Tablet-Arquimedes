@@ -63,7 +63,7 @@ public class ArquimedesActivity extends AppCompatActivity implements TextToSpeec
 
     private ImageView arq1;
     private ImageView arq2;
-    private ImageView arq3;
+    private ImageView arq3, arq4, arq5, arq6;
 
     private Button exit;
     private Button hablar;
@@ -76,6 +76,8 @@ public class ArquimedesActivity extends AppCompatActivity implements TextToSpeec
     @Override
     public void onInit(int status){
         if (status == TextToSpeech.SUCCESS) {
+            tts.setPitch(0.8f);   // incluso 0.8f si sigue preguntando
+            tts.setSpeechRate(1.0f); // evita exage
             tts.setLanguage(new Locale("es", "ES"));
         }
     }
@@ -95,6 +97,12 @@ public class ArquimedesActivity extends AppCompatActivity implements TextToSpeec
         arq1 = findViewById(R.id.arq1);
         arq2 = findViewById(R.id.arq2);
         arq3 = findViewById(R.id.arq3);
+        arq4 = findViewById(R.id.arq4);
+        arq5 = findViewById(R.id.arq5);
+        arq6 = findViewById(R.id.arq6);
+
+
+
 
 
         exit.setOnClickListener(new View.OnClickListener() {
@@ -275,6 +283,11 @@ public class ArquimedesActivity extends AppCompatActivity implements TextToSpeec
                     hablar("No sé cómo se me pudo olvidar su nombre, pero gracias a vosotros he podido recordarlo.");
                     Thread.sleep(6000);
 
+
+                    // Tercera parte del diálogo
+                    hablar("Una de las historias más famosas sobre Arquímedes es la del baño.");
+                    Thread.sleep(5500);
+
                     // Cambio de imágenes (debe ejecutarse en el hilo de la UI)
                     runOnUiThread(() -> {
                         arq1.setVisibility(View.GONE);
@@ -282,18 +295,32 @@ public class ArquimedesActivity extends AppCompatActivity implements TextToSpeec
                     });
                     Thread.sleep(1000);
 
-                    // Tercera parte del diálogo
-                    hablar("Una de las historias más famosas sobre Arquímedes es la del baño.");
-                    Thread.sleep(5500);
-
                     hablar("Cuenta la historia que Arquímedes recibió un encargo del rey Herión, que quería saber si la corona que había adquirido era realmente de oro.");
                     Thread.sleep(10000);
+
+                    runOnUiThread(() -> {
+                        arq2.setVisibility(View.GONE);
+                        arq3.setVisibility(View.VISIBLE);
+                    });
+                    Thread.sleep(1000);
 
                     hablar("Un día, mientras se bañaba, dio con la solución. Descubrió el principio de la flotación al ver cómo el agua se desbordaba al entrar en la bañera.");
                     Thread.sleep(11000);
 
+                    runOnUiThread(() -> {
+                        arq3.setVisibility(View.GONE);
+                        arq4.setVisibility(View.VISIBLE);
+                    });
+                    Thread.sleep(1000);
+
                     hablar("Entusiasmado por su descubrimiento, salió corriendo gritando '¡Eureka! ¡Eureka!'. Que en griego significa ¡Lo he encontrado! ");
                     Thread.sleep(10000);
+
+                    runOnUiThread(() -> {
+                        arq4.setVisibility(View.GONE);
+                        arq5.setVisibility(View.VISIBLE);
+                    });
+                    Thread.sleep(1000);
 
                     // Última parte del diálogo
                     hablar("Arquímedes pensó que si introducía la corona en la bañera, podía descubrir de qué estaba hecha midiendo el volumen de agua que desbordaba, que sería diferente según el material del que estuviera hecha.\n");
@@ -304,8 +331,8 @@ public class ArquimedesActivity extends AppCompatActivity implements TextToSpeec
 
 
                     runOnUiThread(() -> {
-                        arq2.setVisibility(View.GONE);
-                        arq3.setVisibility(View.VISIBLE);
+                        arq5.setVisibility(View.GONE);
+                        arq6.setVisibility(View.VISIBLE);
                     });
                     Thread.sleep(1000);
 

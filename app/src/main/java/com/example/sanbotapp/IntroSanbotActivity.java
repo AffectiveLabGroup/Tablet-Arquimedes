@@ -78,6 +78,8 @@ public class IntroSanbotActivity extends AppCompatActivity implements TextToSpee
     @Override
     public void onInit(int status){
         if (status == TextToSpeech.SUCCESS) {
+            tts.setPitch(0.8f);   // incluso 0.8f si sigue preguntando
+            tts.setSpeechRate(1.0f); // evita exageraciones
             tts.setLanguage(new Locale("es", "ES"));
         }
     }
@@ -155,7 +157,8 @@ public class IntroSanbotActivity extends AppCompatActivity implements TextToSpee
                             e.printStackTrace();
                         }
 
-                        hablar("Una cosa más, mientras esteis resolviendo el ejercicio, podéis venir y pedirme una pista. Para ello, siguiendo los pasos de antes, tendréis que decirme la palabra PISTA.");
+                        hablar("Una cosa más, mientras esteis resolviendo el ejercicio, podéis venir y pedirme una pista.");
+                        hablar("Para ello, siguiendo los pasos de antes, tendréis que decirme la palabra PISTA.");
 
                         try{
                             Thread.sleep(13500);

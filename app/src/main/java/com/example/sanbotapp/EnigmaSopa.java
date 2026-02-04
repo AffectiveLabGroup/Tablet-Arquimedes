@@ -80,6 +80,8 @@ public class EnigmaSopa extends AppCompatActivity implements TextToSpeech.OnInit
     @Override
     public void onInit(int status){
         if (status == TextToSpeech.SUCCESS) {
+            tts.setPitch(0.8f);   // incluso 0.8f si sigue preguntando
+            tts.setSpeechRate(1.0f); // evita exage
             tts.setLanguage(new Locale("es", "ES"));
         }
     }

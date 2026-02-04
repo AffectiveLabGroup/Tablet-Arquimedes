@@ -27,6 +27,33 @@
         android:id="@+id/arq3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:src="@drawable/arqui6"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        />
+
+    <ImageView
+        android:id="@+id/arq4"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/arqui4"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        />
+
+    <ImageView
+        android:id="@+id/arq5"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/arqui5"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        />
+
+    <ImageView
+        android:id="@+id/arq6"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:src="@drawable/arqui3"
         android:scaleType="centerCrop"
         android:visibility="gone"

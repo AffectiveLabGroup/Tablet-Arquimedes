@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.Voice;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -68,6 +69,9 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     @Override
     public void onInit(int status){
         if (status == TextToSpeech.SUCCESS) {
+            tts.setPitch(0.8f);   // incluso 0.8f si sigue preguntando
+            tts.setSpeechRate(1f);
+            tts.setSpeechRate(1.0f); // evita exageraciones
             tts.setLanguage(new Locale("es", "ES"));
         }
     }
@@ -449,7 +453,6 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     }
 
 
-
     private void hablar(String text) {
         if (text == null || text.trim().isEmpty()) return;
 
@@ -474,15 +477,49 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
         hablar("Vaya, parece que me he quedado dormida.");
 
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         hablar("No sé donde estoy.");
 
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         hablar("Todo esto es muy raro, no recuerdo nada. ");
+        try {
+            Thread.sleep(4000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         hablar("Me siento muy confusa.");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         hablar("Perdón si os he asustado, me llamo Lola.");
+        try {
+            Thread.sleep(4000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-        hablar("¡Mi creador me comentó que conocería nuevos amigos! ¡Estoy segura de que sois vosotros! Tengo que descubrir el nombre de mi creador y no puedo hacerlo sin vuestra ayuda.");
+        hablar("¡Mi creador me comentó que conocería nuevos amigos!");
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        hablar ("Tengo que descubrir el nombre de mi creador, y no puedo hacerlo sin vuestra ayuda.");
 
         Intent intentej = new Intent(MainActivity.this, IntroSanbotActivity.class);
         // Pasar el intent a string para poder pasarlo a la siguiente pantalla
