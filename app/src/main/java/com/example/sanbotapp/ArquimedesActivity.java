@@ -275,7 +275,7 @@ public class ArquimedesActivity extends AppCompatActivity implements TextToSpeec
                 try {
                     // Primer diálogo
                     hablar("Estoy muy contenta de que hayáis conseguido llegar hasta aquí.");
-                    Thread.sleep(7000);
+                    Thread.sleep(8000);
 
                     hablar("Arquímedes fue mi creador, un gran matemático, físico, ingeniero, inventor y astrónomo griego.");
                     Thread.sleep(9000);
