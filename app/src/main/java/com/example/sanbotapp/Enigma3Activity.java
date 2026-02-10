@@ -346,7 +346,7 @@ public class Enigma3Activity extends AppCompatActivity implements TextToSpeech.O
 
 
                 try {
-                    Thread.sleep(7000);
+                    Thread.sleep(9000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -356,7 +356,7 @@ public class Enigma3Activity extends AppCompatActivity implements TextToSpeech.O
 
 
                 try {
-                    Thread.sleep(10000);
+                    Thread.sleep(13000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

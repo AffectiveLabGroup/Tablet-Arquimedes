@@ -431,7 +431,7 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
                             hablar("Para resolverlo debes colocar un número en cada círculo, de tal forma que el resultado de la multiplicación de los números de cada fila y columna sea el mismo.");
 
                             try {
-                                Thread.sleep(9000);
+                                Thread.sleep(12000);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }

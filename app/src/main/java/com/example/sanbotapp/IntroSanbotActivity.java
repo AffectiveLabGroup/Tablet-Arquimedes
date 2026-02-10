@@ -158,10 +158,15 @@ public class IntroSanbotActivity extends AppCompatActivity implements TextToSpee
                         }
 
                         hablar("Una cosa más, mientras esteis resolviendo el ejercicio, podéis venir y pedirme una pista.");
+                        try{
+                            Thread.sleep(9000);
+                        }catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         hablar("Para ello, siguiendo los pasos de antes, tendréis que decirme la palabra PISTA.");
 
                         try{
-                            Thread.sleep(13500);
+                            Thread.sleep(9000);
                         }catch (InterruptedException e) {
                             e.printStackTrace();
                         }

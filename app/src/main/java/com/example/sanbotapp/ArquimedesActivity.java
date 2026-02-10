@@ -342,7 +342,6 @@ public class ArquimedesActivity extends AppCompatActivity implements TextToSpeec
                     runOnUiThread(() -> hablar.setVisibility(View.VISIBLE));
 
 
-
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
