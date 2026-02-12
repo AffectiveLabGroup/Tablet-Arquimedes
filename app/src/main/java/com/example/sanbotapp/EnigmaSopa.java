@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -72,6 +73,8 @@ public class EnigmaSopa extends AppCompatActivity implements TextToSpeech.OnInit
 
     private Boolean finenigma = false;
 
+    private MediaPlayer mp1;
+
 
     private TextToSpeech tts;
     private SpeechRecognizer speechRecognizer;
@@ -127,7 +130,7 @@ public class EnigmaSopa extends AppCompatActivity implements TextToSpeech.OnInit
                         finenigma = true;
 
                         // ofrecer más respuestas variadas
-                        int random = (int) (Math.random() * 3);
+                        /*int random = (int) (Math.random() * 3);
                         if(random == 0){
                             hablar("¡Eureka! Sí, el es mi creador. Uno de los hombres más inteligentes de la historia.");
                         } else if(random == 1){
@@ -136,7 +139,10 @@ public class EnigmaSopa extends AppCompatActivity implements TextToSpeech.OnInit
                             hablar("Claro, es cierto, el es mi creador, no sé cómo se me pudo olvidar.");
                         } else {
                             hablar("¡Eureka! Esa era la respuesta correcta, gracias por descubrir el nombre de mi creador.");
-                        }
+                        }*/
+
+                        playSound(R.raw.en3correcto);
+
 
                         try{
                             Thread.sleep(8000);
@@ -144,7 +150,7 @@ public class EnigmaSopa extends AppCompatActivity implements TextToSpeech.OnInit
                             e.printStackTrace();
                         }
 
-                        hablar("Ahora que sabes quién es mi creador, me gustaría hablarte un poco sobre él. ");
+                        //hablar("Ahora que sabes quién es mi creador, me gustaría hablarte un poco sobre él. ");
                         //TODO: MANDAR A LA SIGUIENTE ACTIVIDAD E INTRODUCIR QUE VA A HACER UNA PRESENTACIÓN SOBRE ARQUÍMEDES
 
                         Intent intent = new Intent(EnigmaSopa.this, ArquimedesActivity.class);
@@ -157,7 +163,7 @@ public class EnigmaSopa extends AppCompatActivity implements TextToSpeech.OnInit
                             e.printStackTrace();
                         }
 
-                        // ofrecer más respuestas variadas
+                        /*// ofrecer más respuestas variadas
                         int random = (int) (Math.random() * 3);
                         if(random == 0){
                             hablar("¡Eureka! Sí, el es mi creador. Uno de los hombres más inteligentes de la historia.Prueba a introducir la respuesta en la pantalla, y esperemos al resto de participantes");
@@ -167,7 +173,7 @@ public class EnigmaSopa extends AppCompatActivity implements TextToSpeech.OnInit
                             hablar("Claro, es cierto, el es mi creador, no sé cómo se me pudo olvidar. Prueba a introducir la respuesta en la pantalla, y esperemos al resto de participantes");
                         } else {
                             hablar("¡Eureka! Esa era la respuesta correcta, gracias por descubrir el nombre de mi creador. Prueba a introducir la respuesta en la pantalla, y esperemos al resto de participantes");
-                        }
+                        }*/
 
                         try{
                             Thread.sleep(7000);
@@ -179,57 +185,14 @@ public class EnigmaSopa extends AppCompatActivity implements TextToSpeech.OnInit
 
                 } else if (text.contains("repetir") || text.contains("repite")){
                     handler.removeCallbacks(runnable);
-                    hablar("Claro, el enigma consiste en descrifrar la frase que se muestra en la pantalla. Seguro que con eso conseguimos descubrir el nombre de mi creador");
+                    //hablar("Claro, el enigma consiste en descrifrar la frase que se muestra en la pantalla. Seguro que con eso conseguimos descubrir el nombre de mi creador");
+                    playSound(R.raw.quehaceren3);
                     handler.postDelayed(runnable, 120000);
 
-                } else if (text.contains("pista") || text.equals("sí")){
-
-                    // Respuestas aleatorias y variadas del estilo, vaya, parece que no tengo ninguna pista
-                    int respuestaAleatoria = (int) (Math.random() * 3) + 1;
-                    if (respuestaAleatoria == 1){
-                        hablar("Vaya, parece que no tengo ninguna pista que darte.");
-                    } else if (respuestaAleatoria == 2){
-                        hablar("Lo siento, no tengo ninguna pista, tendrás que descibrirlo sin mi ayuda.");
-                    } else if (respuestaAleatoria == 3){
-                        hablar("Lo siento, no tengo ninguna pista que pueda darte.");
-                    }
-
-                } else if(text.contains("no") || text.contains("no quiero") ||text.contains("no gracias")){
-
-                    int respuestaAleatoria = (int) (Math.random() * 3) + 1;
-                    if (respuestaAleatoria == 1){
-                        hablar("Vale, si necesitas que te repita el problema, solo tienes que pedírmelo.");
-                    } else if (respuestaAleatoria == 2){
-                        hablar("De acuerdo, si necesitas que te repita el enunciado solo tienes que pedirlo.");
-                    } else if (respuestaAleatoria == 3){
-                        hablar("Está bien, si necesitas ayuda, no dudes en pedírmela.");
-                    }
-
-                } else if(text.contains("ayuda") || text.contains("ayúdame") || text.contains("necesito ayuda")){
-                    int respuestaAleatoria = (int) (Math.random() * 3) + 1;
-                    if (respuestaAleatoria == 1){
-                        hablar("Claro, recuerda que puedes pedirme que te repita el enunciado si lo necesitas.");
-                    } else if (respuestaAleatoria == 2){
-                        hablar("Por supuesto, recuerda que puedes pedirme que te repita el enunciado si lo necesitas.");
-                    } else if (respuestaAleatoria == 3){
-                        hablar("Está bien, si necesitas que te repita el problema, toca mi cabeza y pídemelo.");
-                    }
-
-                } else if(text.contains("gracias") ){
-                    handler.removeCallbacks(runnable);
-                    int respuestaAleatoria = (int) (Math.random() * 3) + 1;
-                    if (respuestaAleatoria == 1){
-                        hablar("¡De nada! Recuerda que puedes preguntarme lo que sea.");
-                    } else if (respuestaAleatoria == 2){
-                        hablar("¡No hay de qué! Estoy aquí para ayudarte.");
-                    } else if (respuestaAleatoria == 3){
-                        hablar("¡No tienes por qué darme las gracias! Estoy aquí para ayudarte.");
-                    }
-                    handler.postDelayed(runnable, 120000);
                 } else{
                     handler.removeCallbacks(runnable);
 
-                    int respuestaAleatoria = (int) (Math.random() * 3) + 1;
+                    /*int respuestaAleatoria = (int) (Math.random() * 3) + 1;
                     if (respuestaAleatoria == 1){
                         hablar("¡Vaya! Esa no es la respuesta correcta. ¡No te preocupes, sigue intentándolo!");
                     } else if (respuestaAleatoria == 2){
@@ -238,7 +201,9 @@ public class EnigmaSopa extends AppCompatActivity implements TextToSpeech.OnInit
                         hablar("¡Incorrecto! ¿Quieres que te repita el enunciado?");
                     } else {
                         hablar("¡Vaya! Esa no es la respuesta que esperaba");
-                    }
+                    }*/
+
+                    playSound(R.raw.en3incorrecto);
 
                     try{
                         Thread.sleep(1000);
@@ -264,6 +229,22 @@ public class EnigmaSopa extends AppCompatActivity implements TextToSpeech.OnInit
 
         setonClicks();
 
+    }
+
+    private void playSound(int resId) {
+
+        if (mp1 != null) {
+            mp1.release();
+            mp1 = null;
+        }
+
+        mp1 = MediaPlayer.create(this, resId);
+        mp1.setOnCompletionListener(mp -> {
+            mp.release();
+            mp1 = null;
+        });
+
+        mp1.start();
     }
 
     private void startListening() {
@@ -307,7 +288,7 @@ public class EnigmaSopa extends AppCompatActivity implements TextToSpeech.OnInit
             @Override
             public void run() {
 
-                hablar("Ahora que lo pienso, creo que mi creador me dejó una nota para ayudarme a recordar su nombre");
+                /*hablar("Ahora que lo pienso, creo que mi creador me dejó una nota para ayudarme a recordar su nombre");
 
 
                 try {
@@ -331,23 +312,9 @@ public class EnigmaSopa extends AppCompatActivity implements TextToSpeech.OnInit
                     Thread.sleep(6000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }
+                }*/
 
-                hablar("Recordar venir a mi para decirme la respuesta.");
-
-                try {
-                    Thread.sleep(4000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                hablar("Ya podéis ir a vuestras mesas ¡Buena suerte!");
-
-                try {
-                    Thread.sleep(4000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                playSound(R.raw.introenig3);
             }
         }, 500);  // Retraso mínimo para asegurarse de que la interfaz cargue completamente
         }
@@ -413,7 +380,8 @@ public class EnigmaSopa extends AppCompatActivity implements TextToSpeech.OnInit
             @Override
             public void onClick(View v) {
                 handler.removeCallbacks(runnable);
-                hablar("Recuerda que debes buscar el nombre de mi creador en la sopa de letras ¡Buena suerte!");
+                //hablar("Recuerda que debes buscar el nombre de mi creador en la sopa de letras ¡Buena suerte!");
+                playSound(R.raw.quehaceren3);
                 handler.postDelayed(runnable, 120000);
             }
         });
@@ -463,16 +431,18 @@ public class EnigmaSopa extends AppCompatActivity implements TextToSpeech.OnInit
                     // Borrar el texto de la respuesta
                     respuesta.setText("");
 
-                    int random = (int) (Math.random() * 3);
+                    /*int random = (int) (Math.random() * 3);
                     if(random == 0){
-                        hablar("¡Eureka! Has encontrado el nombre de mi creador, vamos a esperar al resto de participantes. ¡Enhorabuena!");
+                        hablar("¡Eureka! Has encontrado el nombre de mi creador. ¡Enhorabuena!");
                     } else if(random == 1){
-                        hablar("Exacto, sois geniales, descifrar ese nombre no era tarea fácil. Esperemos al resto de participantes seguro que también lo consiguen. ¡Enhorabuena!");
+                        hablar("Exacto, sois geniales, descifrar ese nombre no era tarea fácil. ¡Enhorabuena!");
                     } else if(random == 2){
-                        hablar("Esa es la respuesta, gracias por encontrar el nombre de mi creador. Ahora esperemos a que el resto de participantes también lo consigan. ¡Enhorabuena!");
+                        hablar("Esa es la respuesta, gracias por encontrar el nombre de mi creador. ¡Enhorabuena!");
                     } else {
-                        hablar("¡Fantástico! Habéis conseguido encontrar el nombre de mi creador. Vamos a esperar a que el resto de participantes también lo consigan. ¡Enhorabuena!");
-                    }
+                        hablar("¡Fantástico! Habéis conseguido encontrar el nombre de mi creador. ¡Enhorabuena!");
+                    }*/
+
+                    playSound(R.raw.en3correcto);
 
                     try {
                         Thread.sleep(4000);
@@ -485,7 +455,7 @@ public class EnigmaSopa extends AppCompatActivity implements TextToSpeech.OnInit
                 } else {
 
                     // ofrecer distintas frases de error
-                    int random = (int) (Math.random() * 3);
+                    /*int random = (int) (Math.random() * 3);
                     if(random == 0){
                         hablar("¡Vaya! " + respuesta.getText().toString() + " no es el nombre de mi creador, sigue intentándolo.");
                     } else if(random == 1){
@@ -494,7 +464,9 @@ public class EnigmaSopa extends AppCompatActivity implements TextToSpeech.OnInit
                         hablar("¡Vaya! Parece que " + respuesta.getText().toString() + " no es el nombre de mi creador. Sigue intentándolo, estoy segura de que lo encontrarás.");
                     } else {
                         hablar("¡Incorrecto! Sigue intentándolo, estoy segura de que encontrarás el nombre de mi creador. ¡Ánimo!");
-                    }
+                    }*/
+
+                    playSound(R.raw.en3incorrecto);
 
 
                     try {
@@ -520,7 +492,7 @@ public class EnigmaSopa extends AppCompatActivity implements TextToSpeech.OnInit
                     startActivity(intent);
                 } else {
 
-                    hablar("Ahora que sabes quién es mi creador, me gustaría hablarte un poco sobre él. ");
+                    //hablar("Ahora que sabes quién es mi creador, me gustaría hablarte un poco sobre él. ");
                     //TODO: MANDAR A LA SIGUIENTE ACTIVIDAD E INTRODUCIR QUE VA A HACER UNA PRESENTACIÓN SOBRE ARQUÍMEDES
 
                     Intent intent = new Intent(EnigmaSopa.this, ArquimedesActivity.class);

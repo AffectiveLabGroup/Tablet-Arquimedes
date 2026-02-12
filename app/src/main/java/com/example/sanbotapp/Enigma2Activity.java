@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -75,6 +76,7 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
     EditText vertical22;
     EditText centro;
     Button saltar;
+    private MediaPlayer mp1;
 
     ImageView enigma2;
     private TextToSpeech tts;
@@ -100,6 +102,7 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
         setContentView(R.layout.enigma2);
 
         tts = new TextToSpeech(this, this);
+
 
         comprobar = findViewById(R.id.comprobar);
         vertical11 = findViewById(R.id.vertical11);
@@ -131,7 +134,7 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
                 //TODO: VARIAR, pregunar sobre si han entendido el enigma o sobre si necesitan ayuda o si necesitan una pista
 
                 // Preguntar aleatoriamente si necesita una pista o si quiere que le repita el enunciado
-                int random = (int) (Math.random() * 3);
+                /*int random = (int) (Math.random() * 3);
                 if(random == 0){
                     if(pistas > 0){
                         hablar("¿Necesitas una pista?");
@@ -151,7 +154,10 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
                     hablar("¿Necesitas una pista?");
                     startListening();
 
-                }
+                }*/
+
+
+                playSound(R.raw.quierepista);
                 // Configura el handler para que vuelva a ejecutar este bloque en 30 segundos
                 handler.postDelayed(this, 120000); // 30,000 milisegundos = 30 segundos /// Antes 120000
             }
@@ -190,14 +196,16 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
                             finenigma = true;
 
                             // Ofreceme respuestas distintas para cada caso
-                            int random = (int) (Math.random() * 3);
+                            /*int random = (int) (Math.random() * 3);
                             if (random == 0) {
                                 hablar("¡Genial! Esa es la respuesta. Gracias por resolver este enigma ¡Sois geniales!");
                             } else if (random == 1) {
                                 hablar("¡Correcto! Esa es la respuesta. ¡Sois unos cracks! ");
                             } else {
                                 hablar("¡Eso es! ¡Sois unos genios! ");
-                            }
+                            }*/
+
+                            playSound(R.raw.en2correcto72);
 
                             // Esperar a que termine de hablar
                             try {
@@ -214,20 +222,24 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
                         } else {
 
                             // Ofreceme respuestas distintas para cada caso
-                            int random = (int) (Math.random() * 3);
+                            /*int random = (int) (Math.random() * 3);
                             if (random == 0) {
                                 hablar("¡Genial! Esa es la respuesta. Gracias por resolver este enigma ¡Sois geniales! Prueba a introducir la respuesta por pantalla y esperemos al resto de participantes");
                             } else if (random == 1) {
                                 hablar("¡Correcto! Esa es la respuesta. ¡Sois unos cracks! Prueba a introducir la respuesta por pantalla y esperemos al resto de participantes");
                             } else {
                                 hablar("¡Eso es! ¡Sois unos genios! Sigamos con el siguiente enigma. Prueba a introducir la respuesta por pantalla y esperemos al resto de participantes");
-                            }
+                            }*/
+
+                            playSound(R.raw.enig2correcto);
 
                         }
 
                     } else if (text.contains("repetir") || text.contains("repite")) {
                         handler.removeCallbacks(runnable);
-                        hablar("Claro, el enigma consiste colocar un número en cada casilla, de tal forma que el resultado de la multiplicación de los números de cada fila y columna sea el mismo");
+                        //hablar("Claro, el enigma consiste colocar un número en cada casilla, de tal forma que el resultado de la multiplicación de los números de cada fila y columna sea el mismo");
+
+                        playSound(R.raw.quehacerenigma2);
                         handler.postDelayed(runnable, 130000);
 
                     } else if (text.contains("pista") || text.contains("sí")) {
@@ -235,75 +247,44 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
                         if (pistas == 0) {
 
                             // Ya no tengo más pistas, pero voy a repetirta alguna. Haz que saque la primera la segunda o la tercera pista de forma aleatoria
-                            int pistaAleatoria = (int) (Math.random() * 3) + 1;
+                            /*int pistaAleatoria = (int) (Math.random() * 3) + 1;
                             if (pistaAleatoria == 1) {
                                 hablar("Ya no tengo más pistas, pero voy a repetirte alguna. Descarta el número 5");
                             } else if (pistaAleatoria == 2) {
                                 hablar("Vale, aquí tienes una pista. El número 7 no se utiliza");
                             } else if (pistaAleatoria == 3) {
                                 hablar("Te voy a repetir la tercera pista, debes colocar el número 2 en el centro");
-                            }
+                            }*/
+
+                            playSound(R.raw.notengopistas);
+
                             handler.postDelayed(runnable, 120000);
                         } else if (pistas == 3) {
 
-                            hablar("Claro, aquí tienes una primera pista. Voy a ser buena. Descarta el número 5");
+                            //hablar("Claro, aquí tienes una primera pista. Voy a ser buena. Descarta el número 5");
+                            playSound(R.raw.pista1);
                             pistas--;
                             handler.postDelayed(runnable, 120000);
                         } else if (pistas == 2) {
-                            hablar("Por supuesto, esta segunda pista es que no te hace falta el 7");
+                            //hablar("Por supuesto, esta segunda pista es que no te hace falta el 7");
+                            playSound(R.raw.pista2);
                             pistas--;
                             handler.postDelayed(runnable, 120000);
                         } else if (pistas == 1) {
 
-                            hablar("Claro, pero esta es ya la última pista. Debes colocar el número 2 en el centro ¡Suerte con el enigma!");
+                            //hablar("Claro, pero esta es ya la última pista. Debes colocar el número 2 en el centro ¡Suerte con el enigma!");
+                            playSound(R.raw.pista3);
                             pistas--;
                             handler.postDelayed(runnable, 120000);
                         }
-                    } else if (text.contains("no") || text.contains("no quiero") || text.contains("no gracias")) {
-                        handler.removeCallbacks(runnable);
-                        // TODO: OFRECER RESPUESTAS MÁS VARIADAS DE FORMA ALEATORIA
-
-                        int respuestaAleatoria = (int) (Math.random() * 3) + 1;
-                        if (respuestaAleatoria == 1) {
-                            hablar("Vale, si necesitas que te repita el problema, solo tienes que pedírmelo.");
-                        } else if (respuestaAleatoria == 2) {
-                            hablar("De acuerdo, si necesitas una pista, solo tienes que pedirla.");
-                        } else if (respuestaAleatoria == 3) {
-                            hablar("Está bien, si necesitas ayuda, no dudes en pedírmela.");
-                        }
-                        handler.postDelayed(runnable, 120000);
-                    } else if (text.contains("ayuda") || text.contains("ayúdame") || text.contains("necesito ayuda")) {
-                        handler.removeCallbacks(runnable);
-
-                        int respuestaAleatoria = (int) (Math.random() * 3) + 1;
-                        if (respuestaAleatoria == 1) {
-                            hablar("Claro, recuerda que puedes tocar mi cabeza y decirme la palabra PISTA, o puedes consultar las pistas clicando en el botón Consultar pista, que se puede ver en mi pantalla.");
-                        } else if (respuestaAleatoria == 2) {
-                            hablar("Por supuesto, recuerda que si necesitas una pista, solo tienes que pedirla diciéndome la palabra PISTA.");
-                        } else if (respuestaAleatoria == 3) {
-                            hablar("Está bien, si necesitas que te repita el problema, toca mi cabeza y pídemelo.");
-                        }
-                        handler.postDelayed(runnable, 120000);
-                    } else if (text.contains("gracias") || text.contains("gracias robot")) {
-                        handler.removeCallbacks(runnable);
-                        // Ofreceme 3 respuestas diferentes aleatorias
-                        int respuestaAleatoria = (int) (Math.random() * 3) + 1;
-                        if (respuestaAleatoria == 1) {
-                            hablar("¡De nada! Recuerda que puedes preguntarme lo que sea.");
-                        } else if (respuestaAleatoria == 2) {
-                            hablar("¡No hay de qué! Estoy aquí para ayudarte.");
-                        } else if (respuestaAleatoria == 3) {
-                            hablar("¡No tienes por qué darme las gracias! Estoy aquí para ayudarte.");
-                        }
-                        handler.postDelayed(runnable, 120000);
-                    } else {
+                    }  else {
                         handler.removeCallbacks(runnable);
 
                         try {
                             int respuestadeluser = Integer.parseInt(text.toString());
 
                             if (respuestadeluser < 72) {
-                                int respuestaAleatoria = (int) (Math.random() * 3) + 1;
+                                /*int respuestaAleatoria = (int) (Math.random() * 3) + 1;
                                 if (respuestaAleatoria == 1) {
                                     hablar("¡Vaya! Esa no es la respuesta correcta. Prueba con un número más grande. ¡Ánimo!");
                                 } else if (respuestaAleatoria == 2) {
@@ -312,10 +293,12 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
                                     hablar("¡Oh no! ¿Quieres que te repita el enunciado? Recuerda que debes multiplicar las filas y las columnas.");
                                 } else {
                                     hablar("¡Vaya! Esa no es la respuesta que esperaba, inténtalo de nuevo.");
-                                }
+                                }*/
+                                playSound(R.raw.esanoeslasolucion);
+
 
                             } else if (respuestadeluser > 72) {
-                                int respuestaAleatoria = (int) (Math.random() * 3) + 1;
+                                /*int respuestaAleatoria = (int) (Math.random() * 3) + 1;
                                 if (respuestaAleatoria == 1) {
                                     hablar("¡Vaya! Esa no es la respuesta correcta. Prueba con un número más pequeño. ¡Ánimo!");
                                 } else if (respuestaAleatoria == 2) {
@@ -324,12 +307,13 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
                                     hablar("¡Oh no! ¿Quieres que te repita el enunciado? Recuerda que debes multiplicar las filas y las columnas.");
                                 } else {
                                     hablar("¡Vaya! Esa no es la respuesta que esperaba, inténtalo de nuevo.");
-                                }
+                                }*/
+                                playSound(R.raw.esanoeslasolucion);
 
                             }
                         } catch (NumberFormatException e) {
 
-                            int respuestaAleatoria = (int) (Math.random() * 3) + 1;
+                           /* int respuestaAleatoria = (int) (Math.random() * 3) + 1;
                             if (respuestaAleatoria == 1) {
                                 hablar("¡Vaya! Esa no es la respuesta correcta. ¡No te preocupes, sigue intentándolo!");
                             } else if (respuestaAleatoria == 2) {
@@ -338,7 +322,9 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
                                 hablar("¡Oh no! ¿Quieres que te repita el enunciado?");
                             } else {
                                 hablar("¡Vaya! Esa no es la respuesta que esperaba");
-                            }
+                            }*/
+
+                            playSound(R.raw.esanoeslasolucion);
 
                             try {
                                 Thread.sleep(1000);
@@ -420,7 +406,9 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
                         public void run() {
 
 
-                            hablar("Solamente recuerdo una cosa..., no sé qué significa, pero tenéis que ayudarme a descifrarlo y así descubrir el nombre de mi creador");
+                            playSound(R.raw.enigma2);
+
+                           /* hablar("Solamente recuerdo una cosa..., no sé qué significa, pero tenéis que ayudarme a descifrarlo y así descubrir el nombre de mi creador");
                             try {
                                 Thread.sleep(10000);
                             } catch (InterruptedException e) {
@@ -455,19 +443,12 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
                             }
 
 
-                            hablar("Volver a vuestras mesas e intentar resolverlo");
-                            try {
-                                Thread.sleep(4000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
                             hablar("¡Confío en vosotros!, ¡Buena suerte!");
                             try {
                                 Thread.sleep(3000);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
-                            }
+                            }*/
 
 
                         }
@@ -543,7 +524,9 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
             @Override
             public void onClick(View v) {
                 handler.removeCallbacks(runnable);
-                hablar("Recuerda que el enigma consiste en colocar un número en cada casilla, de tal forma que el resultado de la multiplicación de los números de cada fila y columna sea el mismo");
+                //hablar("Recuerda que el enigma consiste en colocar un número en cada casilla, de tal forma que el resultado de la multiplicación de los números de cada fila y columna sea el mismo");
+
+                playSound(R.raw.quehacerenigma2);
                 handler.postDelayed(runnable, 120000);
             }
         });
@@ -590,7 +573,7 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
 
 
                     // Ofrece más respuestas de error
-                    Integer respuestaAleatoria = (int) (Math.random() * 4);
+                    /*Integer respuestaAleatoria = (int) (Math.random() * 4);
                     if (respuestaAleatoria == 0){
                         hablar("¡Vaya! Parece que no has completado todo los círculos");
                     } else if (respuestaAleatoria == 1){
@@ -599,7 +582,10 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
                         hablar("¡Ups! Parece que te has olvidado de rellenar algún círculo");
                     } else {
                         hablar("Parece que te has olvidado de rellenar algún círculo, si necesitas ayuda no dudes en pedirla");
-                    }
+                    }*/
+
+
+                    playSound(R.raw.en2faltancirculos);
 
                     return;
                 }
@@ -630,16 +616,17 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
 
                     //TODO: No poner bien las respues, sino decir que está bien pero que ahora le falta decirle la solución de la multiplicación
 
-                    int respuestaAleatoria = (int) (Math.random() * 3) + 1;
+                    /*int respuestaAleatoria = (int) (Math.random() * 3) + 1;
                     if (respuestaAleatoria == 1){
-                        hablar("¡Muy bien! ¡Has resuelto el enigma! Vamos a esperar al resto de participantes para que lo resuelvan también.");
+                        hablar("¡Muy bien! ¡Habéis resuelto el enigma!");
                     } else if (respuestaAleatoria == 2){
-                        hablar("¡Perfecto! Esos son los números correctos. Antes de decirme la solución de la multiplicación, vamos a esperar a que el resto de participantes resuelvan el enigma.");
+                        hablar("¡Perfecto! Esos son los números correctos.");
                     } else if (respuestaAleatoria == 3){
-                        hablar("¡Genial! Antes de pasar al siguiente enigma vamos a esperar a que el resto de participantes resuelvan este.");
+                        hablar("¡Genial! Sois unos genios! ");
                     } else {
-                        hablar("¡Muy bien! ¡Has resuelto el enigma! Vamos a esperar al resto de participantes para que lo resuelvan también.");
-                    }
+                        hablar("¡Muy bien! ¡Habéis resuelto el enigma! ¡Sois geniales!");
+                    }*/
+                    playSound(R.raw.enig2correcto);
 
                     flechaSiguiente.setVisibility(View.VISIBLE);
 
@@ -667,8 +654,10 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
                             || vertical22.getText().toString().equals("4") || centro.getText().toString().equals("4") || vertical11.getText().toString().equals("9")
                             || vertical12.getText().toString().equals("9") || vertical21.getText().toString().equals("9") || vertical22.getText().toString().equals("9") || centro.getText().toString().equals("9") )
                     {
-                        hablar("¡Vaya! Parece que has repetido algún número, recuerda que cada círculo debe tener un número diferente");
-                    } else if (resultadoV1 == 72 && resultadoV2 != 72 && horizontal != 72) {
+                        //hablar("¡Vaya! Parece que has repetido algún número, recuerda que cada círculo debe tener un número diferente");
+
+                        playSound(R.raw.numrepetido);
+                    } /*else if (resultadoV1 == 72 && resultadoV2 != 72 && horizontal != 72) {
                         hablar("¡Oh no! Esa no es la solución, pero parece que la primera columna es correcta ¡Buen trabajo!");
 
                     } else if(resultadoV2 == 72 && resultadoV1 != 72 && horizontal != 72){
@@ -694,8 +683,11 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
 
                     } else if (horizontal < 72) {
                         hablar("Esa no es la respuesta correcta, la fila horizontal es demasiado baja. Prueba con números más grandes.");
-                    } else {
-                        hablar("Parece que algo no está bien, la operación horizontal es demasiado alta. Prueba con números más pequeños.");
+                    }*/ else {
+                        //hablar("Parece que algo no está bien, la operación horizontal es demasiado alta. Prueba con números más pequeños.");
+
+
+                        playSound(R.raw.esanoeslasolucion);
                     }
 
                     try{
@@ -772,7 +764,8 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
                     startActivity(intent);
                 } else {
                     // Decir texto
-                    hablar("Para pasar al siguiente enigma tenéis que decirme el resultado de la multiplicación de las filas y columnas");
+                    //hablar("Para pasar al siguiente enigma tenéis que decirme el resultado de la multiplicación de las filas y columnas");
+                    playSound(R.raw.flecchaen2);
                     // Crear el AlertDialog
                     AlertDialog.Builder builder = new AlertDialog.Builder(Enigma2Activity.this);
 
@@ -810,6 +803,22 @@ public class Enigma2Activity extends AppCompatActivity implements TextToSpeech.O
             }
         });
 
+    }
+
+    private void playSound(int resId) {
+
+        if (mp1 != null) {
+            mp1.release();
+            mp1 = null;
+        }
+
+        mp1 = MediaPlayer.create(this, resId);
+        mp1.setOnCompletionListener(mp -> {
+            mp.release();
+            mp1 = null;
+        });
+
+        mp1.start();
     }
 
 

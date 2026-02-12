@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -70,6 +71,8 @@ public class ArquimedesActivity extends AppCompatActivity implements TextToSpeec
 
     private TextToSpeech tts;
     private SpeechRecognizer speechRecognizer;
+
+    private MediaPlayer mp1;
     private static final int PERMISSION_REQUEST_AUDIO = 1;
 
 
@@ -156,7 +159,8 @@ public class ArquimedesActivity extends AppCompatActivity implements TextToSpeec
 
                 if (text.contains("eureka") || text.contains("eureca") || text.contains("Eureka")) {
 
-                    hablar("Exacto Eureka, ¡Hasta la próxima! ¡Eureka! ¡Eureka! Gracias por despertarme y ayudarme a recordar el nombre de mi creador");
+                    //hablar("Exacto Eureka, ¡Hasta la próxima! ¡Eureka! ¡Eureka! Gracias por despertarme y ayudarme a recordar el nombre de mi creador");
+                    playSound(R.raw.eureka);
 
                     try{
                         Thread.sleep(5000);
@@ -164,31 +168,12 @@ public class ArquimedesActivity extends AppCompatActivity implements TextToSpeec
                         e.printStackTrace();
                     }
 
-                } else if( text.contains("oro") ) {
-                    hablar("Sí, debía ser un objeto de oro, pero ¿qué más debía tener para que Arquímedes pudiera demostrar que no era de oro puro?");
-
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                } else if( text.contains("mismo peso") ) {
-
-                    hablar("Casi, casi, ¿Mismo peso el qué?");
-
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-
                 }
 
                 else {
                     //Respuestas aleatorias
-                    int random = (int) (Math.random() * 3) + 1;
+                    playSound(R.raw.falloarq);
+                    /*int random = (int) (Math.random() * 3) + 1;
                     switch (random) {
                         case 1:
                             hablar("¡Vaya! Esa no es la respuesta correcta, inténtalo de nuevo.");
@@ -199,12 +184,13 @@ public class ArquimedesActivity extends AppCompatActivity implements TextToSpeec
                         case 3:
                             hablar("Piensa un poquito más, seguro que lo consigues.");
                             break;
+
                     }
                     try {
                         Thread.sleep(3000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
-                    }
+                    }*/
                 }
 
                 }
@@ -225,6 +211,21 @@ public class ArquimedesActivity extends AppCompatActivity implements TextToSpeec
 
     }
 
+    private void playSound(int resId) {
+
+        if (mp1 != null) {
+            mp1.release();
+            mp1 = null;
+        }
+
+        mp1 = MediaPlayer.create(this, resId);
+        mp1.setOnCompletionListener(mp -> {
+            mp.release();
+            mp1 = null;
+        });
+
+        mp1.start();
+    }
 
 
     private void startListening() {
@@ -273,8 +274,10 @@ public class ArquimedesActivity extends AppCompatActivity implements TextToSpeec
         private void iniciarSaludo2() {
             new Thread(() -> {
                 try {
+
+                    playSound(R.raw.presentacion);
                     // Primer diálogo
-                    hablar("Estoy muy contenta de que hayáis conseguido llegar hasta aquí.");
+                    /*hablar("Estoy muy contenta de que hayáis conseguido llegar hasta aquí.");
                     Thread.sleep(8000);
 
                     hablar("Arquímedes fue mi creador, un gran matemático, físico, ingeniero, inventor y astrónomo griego.");
@@ -286,7 +289,9 @@ public class ArquimedesActivity extends AppCompatActivity implements TextToSpeec
 
                     // Tercera parte del diálogo
                     hablar("Una de las historias más famosas sobre Arquímedes es la del baño.");
-                    Thread.sleep(5500);
+                    Thread.sleep(5500);*/
+
+                    Thread.sleep(25000);
 
                     // Cambio de imágenes (debe ejecutarse en el hilo de la UI)
                     runOnUiThread(() -> {
@@ -295,7 +300,7 @@ public class ArquimedesActivity extends AppCompatActivity implements TextToSpeec
                     });
                     Thread.sleep(1000);
 
-                    hablar("Cuenta la historia que Arquímedes recibió un encargo del rey Herión, que quería saber si la corona que había adquirido era realmente de oro.");
+                    //hablar("Cuenta la historia que Arquímedes recibió un encargo del rey Herión, que quería saber si la corona que había adquirido era realmente de oro.");
                     Thread.sleep(10000);
 
                     runOnUiThread(() -> {
@@ -304,7 +309,7 @@ public class ArquimedesActivity extends AppCompatActivity implements TextToSpeec
                     });
                     Thread.sleep(1000);
 
-                    hablar("Un día, mientras se bañaba, dio con la solución. Descubrió el principio de la flotación al ver cómo el agua se desbordaba al entrar en la bañera.");
+                    //hablar("Un día, mientras se bañaba, dio con la solución. Descubrió el principio de la flotación al ver cómo el agua se desbordaba al entrar en la bañera.");
                     Thread.sleep(11000);
 
                     runOnUiThread(() -> {
@@ -313,7 +318,7 @@ public class ArquimedesActivity extends AppCompatActivity implements TextToSpeec
                     });
                     Thread.sleep(1000);
 
-                    hablar("Entusiasmado por su descubrimiento, salió corriendo gritando '¡Eureka! ¡Eureka!'. Que en griego significa ¡Lo he encontrado! ");
+                    //hablar("Entusiasmado por su descubrimiento, salió corriendo gritando '¡Eureka! ¡Eureka!'. Que en griego significa ¡Lo he encontrado! ");
                     Thread.sleep(10000);
 
                     runOnUiThread(() -> {
@@ -323,10 +328,10 @@ public class ArquimedesActivity extends AppCompatActivity implements TextToSpeec
                     Thread.sleep(1000);
 
                     // Última parte del diálogo
-                    hablar("Arquímedes pensó que si introducía la corona en la bañera, podía descubrir de qué estaba hecha midiendo el volumen de agua que desbordaba, que sería diferente según el material del que estuviera hecha.\n");
+                    //hablar("Arquímedes pensó que si introducía la corona en la bañera, podía descubrir de qué estaba hecha midiendo el volumen de agua que desbordaba, que sería diferente según el material del que estuviera hecha.\n");
                     Thread.sleep(15000);
 
-                    hablar("Espero que os haya gustado la historia de Arquímedes y que hayáis aprendido algo nuevo sobre él.");
+                    //hablar("Espero que os haya gustado la historia de Arquímedes y que hayáis aprendido algo nuevo sobre él.");
                     Thread.sleep(8000);
 
 
@@ -336,7 +341,7 @@ public class ArquimedesActivity extends AppCompatActivity implements TextToSpeec
                     });
                     Thread.sleep(1000);
 
-                    hablar("¿Recordáis que palabra gritó Arquímedes al dar con este descubrimiento?");
+                    //hablar("¿Recordáis que palabra gritó Arquímedes al dar con este descubrimiento?");
                     Thread.sleep(6000);
 
                     runOnUiThread(() -> hablar.setVisibility(View.VISIBLE));

@@ -53,6 +53,22 @@
             android:layout_marginTop="30dp"
             android:layout_marginEnd="40dp" />
 
+
+        <Button
+            android:id="@+id/pistas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Consultar pistas"
+            android:textColor="@color/colorWhite"
+            android:visibility="visible"
+            android:textAllCaps="false"
+            android:textSize="35sp"
+            android:background="@drawable/button_rounded"
+            android:fontFamily="@font/julee_regular"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="40dp" />
+
         <Button
             android:id="@+id/repetir"
             android:layout_width="wrap_content"
@@ -121,21 +137,7 @@
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/pistas"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/button_rounded"
-                android:fontFamily="@font/julee_regular"
-                android:text="Consultar pistas"
-                android:textAllCaps="false"
-                android:textColor="@color/colorWhite"
-                android:textSize="50sp"
-                android:visibility="visible" />
-
-            <Button
+                <Button
                 android:id="@+id/comprobar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

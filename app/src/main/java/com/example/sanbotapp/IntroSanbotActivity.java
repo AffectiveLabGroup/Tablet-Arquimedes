@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -73,6 +74,8 @@ public class IntroSanbotActivity extends AppCompatActivity implements TextToSpee
     private Intent intent = null;
     private TextToSpeech tts;
     private SpeechRecognizer speechRecognizer;
+
+    MediaPlayer mp1;
     private static final int PERMISSION_REQUEST_AUDIO = 1;
 
     @Override
@@ -141,17 +144,15 @@ public class IntroSanbotActivity extends AppCompatActivity implements TextToSpee
                     String text = matches.get(0).toLowerCase(Locale.getDefault());
                     System.out.println("Texto reconocido: " + text);
 
-                    if (text.contains("hola")) {
-                        hablar("¡Hola! Encantado de verte otra vez.");
-                    } else if (text.contains("cuatro") || text.contains("4")) {
-                        hablar("¡Genial! Veo que lo vais pillando.");
+                    if (text.contains("cuatro") || text.contains("4")) {
+                        //hablar("¡Genial! Veo que lo vais pillando.");
 
                         dos.setVisibility(View.GONE);
                         btnRepetirSuma.setVisibility(View.GONE);
                         btnRepetirPista.setVisibility(View.VISIBLE);
                         pista.setVisibility(View.VISIBLE);
 
-                        try{
+                       /* try{
                             Thread.sleep(3000);
                         }catch (InterruptedException e) {
                             e.printStackTrace();
@@ -163,17 +164,14 @@ public class IntroSanbotActivity extends AppCompatActivity implements TextToSpee
                         }catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        hablar("Para ello, siguiendo los pasos de antes, tendréis que decirme la palabra PISTA.");
+                        hablar("Que pruebe a pedirme una pista la persona de menor edad de la sala, para ello tendrá que decirme la palabra PISTA.");*/
 
-                        try{
-                            Thread.sleep(9000);
-                        }catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
 
-                        hablar("Ayudante, elige a alguien del grupo y probemos");
+                        playSound(R.raw.pedirpista);
+
+
                     } else if (text.contains("pista")) {
-                        hablar("¿Quieres una pista? Primero tendrás que intentar resolver el enigma.");
+                        /*hablar("¿Quieres una pista? Primero tendrás que intentar resolver el enigma.");
                         try{
                             Thread.sleep(5000);
                         }catch (InterruptedException e) {
@@ -186,11 +184,23 @@ public class IntroSanbotActivity extends AppCompatActivity implements TextToSpee
                             Thread.sleep(1000);
                         }catch (InterruptedException e) {
                             e.printStackTrace();
+                        }*/
+
+                        playSound(R.raw.quierepista);
+
+                        try{
+                            Thread.sleep(9000);
+                        }catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
 
                         startActivity(intent);
                     } else {
-                        hablar("Uy, esa no es la respuesta que esperaba. Inténtalo de nuevo.");
+                        //hablar("Uy, esa no es la respuesta que esperaba. Inténtalo de nuevo.");
+
+
+                        playSound(R.raw.norespuesta);
+
                     }
                 }
 
@@ -207,6 +217,24 @@ public class IntroSanbotActivity extends AppCompatActivity implements TextToSpee
         });
 
     }
+
+
+    private void playSound(int resId) {
+
+        if (mp1 != null) {
+            mp1.release();
+            mp1 = null;
+        }
+
+        mp1 = MediaPlayer.create(this, resId);
+        mp1.setOnCompletionListener(mp -> {
+            mp.release();
+            mp1 = null;
+        });
+
+        mp1.start();
+    }
+
 
     private void startListening() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -272,8 +300,10 @@ public class IntroSanbotActivity extends AppCompatActivity implements TextToSpee
         btnRepetirSuma.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hablar("Mi ayudante elegirá a un voluntario que me diga el resultado de la suma que se puede ver en mi pantalla, recordar" +
-                        "que teneis que tocar mi cabeza y esperar a que mis orejas se pongan de color verde antes de decirme la respuesta");
+                /*hablar("La persona de mayor edad de la sala tendrá que decirme el resultado de la suma que se puede ver en mi pantalla, recordar" +
+                        "que teneis que tocar mi cabeza y esperar a que mis orejas se pongan de color verde antes de decirme la respuesta");*/
+
+                playSound(R.raw.quehacersuma);
 
             }
         });
@@ -281,7 +311,9 @@ public class IntroSanbotActivity extends AppCompatActivity implements TextToSpee
         btnRepetirPista.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hablar("Al igual que hemos hecho antes con la suma, mi ayudante va a elegir a un voluntario para que me diga la palabra PISTA");
+                //hablar("Al igual que hemos hecho antes con la suma, tenéis que acercaros y decir la palabra PISTA");
+
+                playSound(R.raw.quehacepista);
 
             }
         });
@@ -313,15 +345,13 @@ public class IntroSanbotActivity extends AppCompatActivity implements TextToSpee
                     @Override
                     public void run() {
 
-                        hablar("Soy un poco tímida, por lo que agradecería que me hablarais de uno en uno");
+                        /*hablar("Soy un poco tímida, por lo que agradecería que me hablarais de uno en uno");
 
                         hablar("Aún sigo un poco confusa.");
 
-                        hablar("Mi ayudante se encargará de elegir a una persona para hablar conmigo.");
-
                         hablar("Cuando tengais la respuesta podéis acercaros y tocarme la cabeza");
 
-                        hablar("Cuando mis orejas estén de color verde como ahora, podréis decirme la respuesta.");
+                        hablar("Cuando mis orejas estén de color verde como ahora, podréis decirme la respuesta.");*/
 
 
                         imgFondo.setVisibility(View.VISIBLE);
@@ -329,7 +359,7 @@ public class IntroSanbotActivity extends AppCompatActivity implements TextToSpee
                         exit.setVisibility(View.VISIBLE);
                         btnRepetirSuma.setVisibility(View.VISIBLE);
                         btnHablar.setVisibility(View.VISIBLE);
-                        hablar("¡Hagamos una prueba!, ayudante, elige a un voluntario que me diga el resultado de la suma que se puede ver en mi pantalla");
+                        //hablar("¡Hagamos una prueba!, ayudante, elige a un voluntario que me diga el resultado de la suma que se puede ver en mi pantalla");
                         
 
                     }

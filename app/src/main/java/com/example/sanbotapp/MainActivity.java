@@ -429,7 +429,17 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        despertar();
+                        //despertar();
+                        mp1 = MediaPlayer.create(MainActivity.this,R.raw.intro);
+                        mp1.start();
+
+                        Intent intentej = new Intent(MainActivity.this, IntroSanbotActivity.class);
+                        // Pasar el intent a string para poder pasarlo a la siguiente pantalla
+
+                        intentej.putExtra("intentgo", intentgo);
+                        startActivity(intentej);
+
+
                     }
                 }, 200);
             }
