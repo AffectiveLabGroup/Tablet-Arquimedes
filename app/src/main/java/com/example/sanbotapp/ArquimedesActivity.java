@@ -291,7 +291,7 @@ public class ArquimedesActivity extends AppCompatActivity implements TextToSpeec
                     hablar("Una de las historias más famosas sobre Arquímedes es la del baño.");
                     Thread.sleep(5500);*/
 
-                    Thread.sleep(25000);
+                    Thread.sleep(30000);
 
                     // Cambio de imágenes (debe ejecutarse en el hilo de la UI)
                     runOnUiThread(() -> {
